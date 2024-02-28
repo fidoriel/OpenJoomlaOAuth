@@ -1,0 +1,29 @@
+name: Publish Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install zip
+      run: sudo apt-get install zip -y
+    
+    - name: Package
+      run: bash package.sh
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./OpenJoomlaOAuth.zip
+        asset_name: OpenJoomlaOAuth.zip
+        asset_content_type: application/zip
