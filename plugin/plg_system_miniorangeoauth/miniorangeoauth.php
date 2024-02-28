@@ -249,41 +249,37 @@ class plgSystemMiniorangeoauth extends JPlugin
                     MoOauthCustomer::plugin_efficiency_check($check_email, $appname, $base_url, $c_time, $dno_ssos, $tno_ssos, $previous_update, $present_update,$reason);
                 }
                 $result = $this->miniOauthFetchDb('#__miniorange_oauth_customer',array('id'=>'1'));
-                $test = base64_decode($result['sso_var']);
-                $test = $test ;
-                $test2 = base64_decode($result['sso_test']);
-                if ((int)$test2 > (int)$test+35) {
-                    exit;
-                }
                 if ($checkUser) {
                     $this->loginCurrentUser($checkUser, $name, $email);
                 } 
                 else 
                 {
 					require_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_miniorange_oauth' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'mo_customer_setup.php';
-                    $dVar = new JConfig();
-                    $check_email = $dVar->mailfrom;
-                    if(isset($sso_eff['contact_admin_emiail']) && $sso_eff['contact_admin_emiail']!=NULL)
-                    {
-                        $check_email=$sso_eff['contact_admin_emiail'];
+
+                    jimport('joomla.user.helper');
+
+                    $user = new JUser;
+                    $data = array();
+                    
+                    $data['name'] = $name;
+                    $data['username'] = $email;
+                    $data['email'] = $email;
+                    $data['groups'] = array('Registered');
+                    $data['password'] = JUserHelper::genRandomPassword();
+                    $data['password2'] = $data['password'];
+                    $data['sendEmail'] = 1;
+                    $data['block'] = 0;
+                
+                    if (!$user->bind($data)) {
+                        echo 'Could not bind data. Error: ' . $user->getError();
+                        exit;
                     }
-					$base_url = JURI::root();
-                    $appname = '';
-                    $c_time = date('m/d/Y H:i:s', $sso_eff['cd_plugin']);
-                    $present_update = date('m/d/Y H:i:s', time());
-                    $previous_update = date('m/d/Y H:i:s', intval($sso_eff['previous_update']));
-                    $dno_ssos = $sso_eff['dno_ssos'];
-					$reason ="Can't create new user";
-					MoOauthCustomer::plugin_efficiency_check($check_email, $appname, $base_url, $c_time, $dno_ssos, 1, $previous_update, $present_update,$reason);
-                    echo '<div style="font-family:Calibri;padding:0 3%;">';
-                    echo '<div style="color: #a94442;background-color: #f2dede;padding: 15px;margin-bottom: 20px;text-align:center;border:1px solid #E6B3B2;font-size:18pt;"> ERROR</div>
-                              <div style="color: #a94442;font-size:14pt; margin-bottom:20px;"><p><strong>Error: </strong>New User could not be created.</p>
-                              <p><strong>Cause:</strong>Current version of the plugin does not have the feature auto create user. Please upgrade to Standard or Premium or Enterprise version of the plugin to creare users.</p></div>
-                              <div style="text-align:center"><a href="https://login.xecurify.com/moas/login?redirectUrl=https://login.xecurify.com/moas/initializepayment&requestOrigin=joomla_oauth_client_enterprise_plan" type="button" style="color: white; background: #185b91; padding: 10px 20px;">Upgrade Now</a></div>  
-                            </div><br>';
-                    $home_link = JURI::root();
-                    echo '<p align="center"><a href=' . $home_link . ' type="button" style="color: white; background: #185b91; padding: 10px 20px;">Back to Website</a><p>';
-                    exit;
+                    
+                    if (!$user->save()) {
+                        echo 'Could not save user. Error: ' . $user->getError();
+                        exit;
+                    }
+                    $this->loginCurrentUser($user, $name, $email);
                 } 
 
             }catch (Exception $e) 
@@ -308,254 +304,6 @@ class plgSystemMiniorangeoauth extends JPlugin
         foreach ($tables as $table) {
             if (strpos($table, "miniorange_oauth_customer"))
                 $tab = $table;
-        }
-        if ($tab) 
-        {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-            $query->select('uninstall_feedback');
-            $query->from('#__miniorange_oauth_customer');
-            $query->where($db->quoteName('id') . " = " . $db->quote(1));
-            $db->setQuery($query);
-            $fid = $db->loadColumn();
-            $tpostData = $post;
-            foreach ($fid as $value) 
-            {
-                if ($value == 0) 
-                {
-                    foreach ($result as $results) 
-                    {
-                        if ($results == $id) 
-                        {
-                            ?>
-                            <div id="myModal" class="modal">
-                                <div class="modal-content">
-                                    <img src="<?php echo JURI::root() . 'plugins/system/miniorangeoauth/assets/image/think.png'; ?>" style="width:70px;height;70px;" alt="">
-                                    <p style="font-size:20px;line-height:30px;">Before uninstalling just give us a chance to make your experience better.
-                                                            We can Help you in every way possible please feel free to contact us. </p>
-                                    <br><br>
-                                    <a style="display:inline-block" href="<?php echo JURI::base()?>index.php?option=com_miniorange_oauth&view=accountsetup&tab-panel=support" class="mo_btn mo_btn-primary">Contact-Us</a>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <button  class="mo_btn mo_btn-primary" onclick="skip()" >Skip</button>
-                                </div>
-                            </div>
-                            <div class="form-style-6 " id="form-style-6">
-                                <!-- <span class="mojsp_close">&times;</span> -->
-                                <h1> Feedback Form for Oauth</h1>
-                                <h3>What Happened? </h3>
-                                <form name="f" method="post" action="" id="mojsp_feedback">
-                                    <input type="hidden" name="mojsp_feedback" value="mojsp_feedback"/>
-                                    <div>
-                                        <p style="margin-left:2%">
-                                            <?php
-                                            $deactivate_reasons = array(
-                                                "Does not have the features I'm looking for",
-                                                "Confusing Interface",
-                                                "Not able to Configure",
-                                                "Redirecting back to login page after Authentication",
-                                                "Not Working",
-                                                "Not Receiving OTP During Registration",
-                                                "Bugs in the plugin",
-                                                "Not able to Configure",
-                                                "Other Reasons:"
-                                            );
-                                            foreach ($deactivate_reasons as $deactivate_reasons) { ?>
-                                        <div class=" radio " style="padding:1px;margin-left:2%;cursor:pointer">
-                                            <label style="font-weight:normal;font-size:14.6px"
-                                                   for="<?php echo $deactivate_reasons; ?>">
-                                                <input type="radio" name="deactivate_plugin"
-                                                       value="<?php echo $deactivate_reasons; ?>" required>
-                                                <?php echo $deactivate_reasons; ?></label>
-                                        </div>
-                                        <?php } ?>
-                                        <br>
-                                        <textarea id="query_feedback" name="query_feedback" rows="4"
-                                                  style="margin-left:2%"
-                                                  cols="50" placeholder="Write your query here"></textarea><br><br><br>
-                                        <tr>
-                                <td width="20%"><b>Email<span style="color: #ff0000;">*</span>:</b></td>
-                                <td><input type="email" name="feedback_email" required placeholder="Enter email to contact." style="width:55%"/></td>
-                                       </tr>
-                                        <?php
-                                        foreach ($tpostData['cid'] as $key) { ?>
-                                            <input type="hidden" name="result[]" value=<?php echo $key ?>>
-                                        <?php } ?>
-                                        <br><br>
-                                        <div class="mojsp_modal-footer">
-                                            <input type="submit" name="miniorange_feedback_submit"
-                                                   class="button button-primary button-large" value="Submit"/>
-                                        </div>
-                                    </div>
-                                </form>
-                                <!-- <form name="f" method="post" action="" id="mojsp_feedback_form_close">
-                                    <input type="hidden" name="option" value="mojsp_skip_feedback"/>
-                                </form> -->
-                            </div>
-                            <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-                            <script>
-                                jQuery('input:radio[name="deactivate_plugin"]').click(function () {
-                                    var reason = jQuery(this).val();
-                                    jQuery('#query_feedback').removeAttr('required')
-                                    if (reason == 'Facing issues During Registration') {
-                                        jQuery('#query_feedback').attr("placeholder", "Can you please describe the issue in detail?");
-                                    } else if (reason == "Does not have the features I'm looking for") {
-                                        jQuery('#query_feedback').attr("placeholder", "Let us know what feature are you looking for");
-                                    } else if (reason == "Other Reasons:") {
-                                        jQuery('#query_feedback').attr("placeholder", "Can you let us know the reason for deactivation");
-                                        jQuery('#query_feedback').prop('required', true);
-                                    } else if (reason == "Not able to Configure") {
-                                        jQuery('#query_feedback').attr("placeholder", "Not able to Configure? let us know so that we can improve the interface");
-                                    } else if (reason == "Confusing Interface") {
-                                        jQuery('#query_feedback').attr("placeholder", "Confusing Interface? Reach out to us at joomlasupport@xecurify.com, we'll help set up the plugin");
-                                    } else if (reason == "Redirecting back to login page after Authentication") {
-                                        jQuery('#query_feedback').attr("placeholder", "Reach out to us at joomlasupport@xecurify.com, we'll help you resolve the issue");
-                                    } else if (reason == "Bugs in the plugin") {
-                                        jQuery('#query_feedback').attr("placeholder", "Kindly let us know at joomlasupport@xecurify.com, what issues were you facing");
-                                    }else if (reason == "Not Working") {
-                                        jQuery('#query_feedback').attr("placeholder", "Kindly let us know at joomlasupport@xecurify.com, which functionality of the plugin is not working for you");
-                                    }
-                                });
-                                // For skipping the feedback form
-                                // When the user clicks on <span> (x), mojsp_close the mojsp_modal 
-                                // var span = document.getElementsByClassName("mojsp_close")[0];
-                                // span.onclick = function () {
-                                //     mojsp_modal.style.display = "none";
-                                //     jQuery('#mojsp_feedback_form_close').submit();
-                                // }
-                                function skip(){
-                                    jQuery("#myModal").css("display","none");
-                                    jQuery('#form-style-6').css("display","block");
-                                }
-                            </script>
-                            <style type="text/css">
-                                .form-style-6 {
-                                    font: 95% Arial, Helvetica, sans-serif;
-                                    max-width: 400px;
-                                    margin: 10px auto;
-                                    padding: 16px;
-                                    background: #F7F7F7;
-                                    display:none;
-                                }
-                                .form-style-6 h1 {
-                                    background: #43D1AF;
-                                    padding: 20px 0;
-                                    font-size: 140%;
-                                    font-weight: 300;
-                                    text-align: center;
-                                    color: #fff;
-                                    margin: -16px -16px 16px -16px;
-                                }
-                                .form-style-6 input[type="text"],
-                                .form-style-6 input[type="date"],
-                                .form-style-6 input[type="datetime"],
-                                .form-style-6 input[type="email"],
-                                .form-style-6 input[type="number"],
-                                .form-style-6 input[type="search"],
-                                .form-style-6 input[type="time"],
-                                .form-style-6 input[type="url"],
-                                .form-style-6 textarea,
-                                .form-style-6 select {
-                                    -webkit-transition: all 0.30s ease-in-out;
-                                    -moz-transition: all 0.30s ease-in-out;
-                                    -ms-transition: all 0.30s ease-in-out;
-                                    -o-transition: all 0.30s ease-in-out;
-                                    outline: none;
-                                    box-sizing: border-box;
-                                    -webkit-box-sizing: border-box;
-                                    -moz-box-sizing: border-box;
-                                    width: 100%;
-                                    background: #fff;
-                                    margin-bottom: 4%;
-                                    border: 1px solid #ccc;
-                                    padding: 3%;
-                                    color: #555;
-                                    font: 95% Arial, Helvetica, sans-serif;
-                                }
-                                .form-style-6 input[type="text"]:focus,
-                                .form-style-6 input[type="date"]:focus,
-                                .form-style-6 input[type="datetime"]:focus,
-                                .form-style-6 input[type="email"]:focus,
-                                .form-style-6 input[type="number"]:focus,
-                                .form-style-6 input[type="search"]:focus,
-                                .form-style-6 input[type="time"]:focus,
-                                .form-style-6 input[type="url"]:focus,
-                                .form-style-6 textarea:focus,
-                                .form-style-6 select:focus {
-                                    box-shadow: 0 0 5px #43D1AF;
-                                    padding: 3%;
-                                    border: 1px solid #43D1AF;
-                                }
-                                .form-style-6 input[type="submit"],
-                                .form-style-6 input[type="button"] {
-                                    box-sizing: border-box;
-                                    -webkit-box-sizing: border-box;
-                                    -moz-box-sizing: border-box;
-                                    width: 100%;
-                                    padding: 3%;
-                                    background: #43D1AF;
-                                    border-bottom: 2px solid #30C29E;
-                                    border-top-style: none;
-                                    border-right-style: none;
-                                    border-left-style: none;
-                                    color: #fff;
-                                }
-                                .form-style-6 input[type="submit"]:hover,
-                                .form-style-6 input[type="button"]:hover {
-                                    background: #2EBC99;
-                                }
-                                .mo_btn{
-                                    border:1px solid #ccc;
-                                    padding:10px;
-                                    height:auto;
-                                    width:auto;
-                                    border-radius:10px;
-                                }
-                                .mo_btn-primary{
-                                    background-color:#2384d3;
-                                    color:white;
-                                    text-decoration:none;
-                                }
-                               .modal {
-                                        position: fixed;
-                                        z-index: 1; 
-                                        left:0;
-                                        top: 0!important;
-                                        width: 100%!important;
-                                        height: 100%!important; 
-                                        overflow: auto; 
-                                        background-color: rgb(0,0,0);
-                                        background-color: rgba(0,0,0,0.4)!important; 
-                                        text-align:center!important;
-                                    }
-                                    .modal-content {
-                                        background-color: #fefefe;
-                                        margin: 15% auto;
-                                        padding: 20px;
-                                        border: 1px solid #888;
-                                        width: 30%;
-                                        height: auto;
-                                        border:3px solid #2384d3;
-                                    }
-                                    .close {
-                                        color: #aaa;
-                                        float: right;
-                                        font-size: 28px;
-                                        font-weight: bold;
-                                    }
-                                    
-                                    .close:hover,
-                                    .close:focus {
-                                        color: black;
-                                        text-decoration: none;
-                                        cursor: pointer;
-                                    }
-                            </style>
-                            <?php
-                            exit;
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -707,7 +455,6 @@ class plgSystemMiniorangeoauth extends JPlugin
         $db->setQuery($query);
         $result = $db->loadAssoc();
         $test = base64_decode(empty($result['sso_test'])?base64_encode(0):$result['sso_test']);
-        $sso_test = (int)$test + 1;
         $sso_test = base64_encode($sso_test);
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
@@ -733,14 +480,6 @@ class plgSystemMiniorangeoauth extends JPlugin
             $redirectloginuri = JURI::root() . 'index.php?';
         }
 
-        $test = base64_decode($result['sso_var']);
-        $test2 = base64_decode($result['sso_test']);
-
-        if ((int)$test2 > (int)$test+25) 
-        {
-            echo "Reached the authentication limit, Please contact administrator";
-            exit;
-        }
         $app->redirect($redirectloginuri);
     }
 

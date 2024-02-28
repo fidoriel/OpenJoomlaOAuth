@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       JOOMLA_DB_HOST: joomladb
-      JOOMLA_DB_PASSWORD: example  ## Hier Passwort eingeben ##
+      JOOMLA_DB_PASSWORD: example
     volumes:
       - app:/var/www/htm
     ports:
@@ -15,7 +15,7 @@ services:
     image: mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: example  ## Hier selbes Passwort eingeben ##
+      MYSQL_ROOT_PASSWORD: example
     volumes:
       - db:/var/lib/mysql
 
