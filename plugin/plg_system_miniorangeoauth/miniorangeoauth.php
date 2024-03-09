@@ -117,7 +117,9 @@ class plgSystemMiniorangeoauth extends JPlugin
                 setcookie("mo_oauth_test", false);
 
             // save the referrer in cookie so that we can come back to origin after SSO
-            if (isset($_SERVER['HTTP_REFERER']))
+            if (isset($get['redirect_after_login']))
+                $loginredirurl = urldecode($get['redirect_after_login']);
+            else if (isset($_SERVER['HTTP_REFERER']))
                 $loginredirurl = $_SERVER['HTTP_REFERER'];
 
             if (!empty($loginredirurl)) {
@@ -257,6 +259,7 @@ class plgSystemMiniorangeoauth extends JPlugin
 					require_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_miniorange_oauth' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'mo_customer_setup.php';
 
                     jimport('joomla.user.helper');
+                    jimport('joomla.access.access');
 
                     $user = new JUser;
                     $data = array();
@@ -264,7 +267,17 @@ class plgSystemMiniorangeoauth extends JPlugin
                     $data['name'] = $name;
                     $data['username'] = $email;
                     $data['email'] = $email;
-                    $data['groups'] = array('Registered');
+
+                    // Get the group ID for 'Registered'
+                    $db = JFactory::getDbo();
+                    $query = $db->getQuery(true)
+                        ->select($db->quoteName('id'))
+                        ->from($db->quoteName('#__usergroups'))
+                        ->where($db->quoteName('title') . ' = ' . $db->quote('Registered'));
+                    $db->setQuery($query);
+                    $registeredGroupId = $db->loadResult();
+                    $data['groups'] = array($registeredGroupId);
+
                     $data['password'] = JUserHelper::genRandomPassword();
                     $data['password2'] = $data['password'];
                     $data['sendEmail'] = 1;
