@@ -11,6 +11,8 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 jimport('joomla.plugin.plugin');
+jimport('joomla.user.helper');
+jimport('joomla.access.access');
 require_once JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_miniorange_oauth'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'mo_customer_setup.php';
 
 class plgSystemMiniorangeoauth extends JPlugin
@@ -258,9 +260,6 @@ class plgSystemMiniorangeoauth extends JPlugin
                 {
 					require_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_miniorange_oauth' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'mo_customer_setup.php';
 
-                    jimport('joomla.user.helper');
-                    jimport('joomla.access.access');
-
                     $user = new JUser;
                     $data = array();
                     
@@ -268,15 +267,7 @@ class plgSystemMiniorangeoauth extends JPlugin
                     $data['username'] = $email;
                     $data['email'] = $email;
 
-                    // Get the group ID for 'Registered'
-                    $db = JFactory::getDbo();
-                    $query = $db->getQuery(true)
-                        ->select($db->quoteName('id'))
-                        ->from($db->quoteName('#__usergroups'))
-                        ->where($db->quoteName('title') . ' = ' . $db->quote('Registered'));
-                    $db->setQuery($query);
-                    $registeredGroupId = $db->loadResult();
-                    $data['groups'] = array($registeredGroupId);
+                    $data['groups'] = $this->getGroupId('Registered');
 
                     $data['password'] = JUserHelper::genRandomPassword();
                     $data['password2'] = $data['password'];
@@ -300,6 +291,18 @@ class plgSystemMiniorangeoauth extends JPlugin
                 exit($e->getMessage());
             }
         }
+    }
+
+    function getGroupId($name)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__usergroups'))
+            ->where($db->quoteName('title') . ' = ' . $db->quote($name));
+        $db->setQuery($query);
+        $registeredGroupId = $db->loadResult();
+        return array($registeredGroupId);
     }
 
     function onExtensionBeforeUninstall($id)
@@ -453,7 +456,7 @@ class plgSystemMiniorangeoauth extends JPlugin
     {
         $app = JFactory::getApplication();
         $user = JUser::getInstance($checkUser->id);
-        $this->updateCurrentUserName($user->id, $name);
+        $this->updateCurrentUser($user->id, $name);
         $session = JFactory::getSession(); #Get current session vars
         // Register the needed session variables
         $session->set('user', $user);
@@ -496,8 +499,9 @@ class plgSystemMiniorangeoauth extends JPlugin
         $app->redirect($redirectloginuri);
     }
 
-    function updateCurrentUserName($id, $name)
+    function updateCurrentUser($id, $name)
     {
+        // Username
         if (empty($name)) {
             return;
         }
@@ -512,6 +516,34 @@ class plgSystemMiniorangeoauth extends JPlugin
         $query->update($db->quoteName('#__users'))->set($fields)->where($conditions);
         $db->setQuery($query);
         $result = $db->execute();
+
+        // Prefetch the groups the user is already in
+        $query = $db->getQuery(true);
+        $query->select($db->quoteName('group_id'))
+            ->from($db->quoteName('#__user_usergroup_map'))
+            ->where($db->quoteName('user_id') . ' = ' . $db->quote($id));
+        $db->setQuery($query);
+        $currentGroupIds = $db->loadColumn();
+
+        // Group
+        $groupIds = $this->getGroupId('Registered');
+
+        foreach ($groupIds as $groupId) {
+            if (in_array($groupId, $currentGroupIds)) {
+                continue;
+            }
+
+            $query = $db->getQuery(true);
+            $columns = array('user_id', 'group_id');
+            $values = array($db->quote($id), $db->quote($groupId));
+            $query->insert($db->quoteName('#__user_usergroup_map'))
+                ->columns($db->quoteName($columns))
+                ->values(implode(',', $values));
+            $db->setQuery($query);
+        }
+        $result = $db->execute();
+
+        return $result;
     }
 
     function updateUsernameToSessionId($userID, $username, $sessionId)
