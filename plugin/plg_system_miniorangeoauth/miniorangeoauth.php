@@ -76,7 +76,6 @@ class plgSystemMiniorangeoauth extends JPlugin
             $admin_phone = $customerResult['admin_phone'];
             $data1 = $radio . ' : ' . $data;
             require_once JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_miniorange_oauth' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'mo_customer_setup.php';
-            MoOauthCustomer::submit_feedback_form($admin_email, $admin_phone, $data1);
             require_once JPATH_SITE . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Installer' . DIRECTORY_SEPARATOR . 'Installer.php';
             
             foreach ($post['result'] as $fbkey) 
@@ -244,13 +243,10 @@ class plgSystemMiniorangeoauth extends JPlugin
                     }
                     $base_url = JURI::root();
                     $appname = '';
-                    $c_time = date('m/d/Y H:i:s', $sso_eff['cd_plugin']);
-                    $present_update = date('m/d/Y H:i:s', time());
                     $previous_update = date('m/d/Y H:i:s', intval($sso_eff['previous_update']));
                     $dno_ssos = $sso_eff['dno_ssos'];
                     require_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_miniorange_oauth' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'mo_customer_setup.php';
                     $reason=$session->get('reason');
-                    MoOauthCustomer::plugin_efficiency_check($check_email, $appname, $base_url, $c_time, $dno_ssos, $tno_ssos, $previous_update, $present_update,$reason);
                 }
                 $result = $this->miniOauthFetchDb('#__miniorange_oauth_customer',array('id'=>'1'));
                 if ($checkUser) {
@@ -267,7 +263,7 @@ class plgSystemMiniorangeoauth extends JPlugin
                     $data['username'] = $email;
                     $data['email'] = $email;
 
-                    $data['groups'] = $this->getGroupId('Registered');
+                    $data['groups'] = $this->getRegisteredGroups();
 
                     $data['password'] = JUserHelper::genRandomPassword();
                     $data['password2'] = $data['password'];
@@ -293,16 +289,30 @@ class plgSystemMiniorangeoauth extends JPlugin
         }
     }
 
-    function getGroupId($name)
+    function getRegisteredGroups()
     {
+        $names = ["Registriert", "Registered"];
         $db = JFactory::getDbo();
-        $query = $db->getQuery(true)
-            ->select($db->quoteName('id'))
-            ->from($db->quoteName('#__usergroups'))
-            ->where($db->quoteName('title') . ' = ' . $db->quote($name));
-        $db->setQuery($query);
-        $registeredGroupId = $db->loadResult();
-        return array($registeredGroupId);
+        $groupIds = array();
+    
+        foreach ($names as $name) {
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__usergroups'))
+                ->where($db->quoteName('title') . ' = ' . $db->quote($name));
+            $db->setQuery($query);
+            $groupId = $db->loadResult();
+            
+            if ($groupId !== null) {
+                $groupIds[] = $groupId;
+            }
+        }
+
+        if (empty($groupIds)) {
+            throw new Exception('No registered groups found for: ' . implode(', ', $names));
+        }
+
+        return $groupIds;
     }
 
     function onExtensionBeforeUninstall($id)
@@ -526,7 +536,7 @@ class plgSystemMiniorangeoauth extends JPlugin
         $currentGroupIds = $db->loadColumn();
 
         // Group
-        $groupIds = $this->getGroupId('Registered');
+        $groupIds = $this->getRegisteredGroups();
 
         foreach ($groupIds as $groupId) {
             if (in_array($groupId, $currentGroupIds)) {

@@ -115,7 +115,7 @@ if(!JPluginHelper::isEnabled('system', 'miniorangeoauth')) {
             </div>
         </div>
 <?php
-function getAppJason(){
+function getAppJson(){
     return '{	
         "azure": {
             "label":"Azure AD", "type":"oauth", "image":"azure.png", "scope": "openid email profile", "authorize": "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize", "token": "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token", "userinfo":"https://graph.microsoft.com/beta/me", "guide":"https://plugins.miniorange.com/azure-ad-sso-single-sign-on-joomla-using-oauth-client-openid-connect", "logo_class":"fa fa-windowslive"
@@ -456,7 +456,7 @@ function getAppData()
 }
 function selectAppByIcon()
 {
-    $appArray = json_decode(getAppJason(),TRUE); 
+    $appArray = json_decode(getAppJson(),TRUE); 
     $ImagePath=JURI::base().'components/com_miniorange_oauth/assets/images/';
     $imageTableHtml = "<table id='moAuthAppsTable'>";
     $i=1;
@@ -519,7 +519,7 @@ function selectAppByIcon()
 }
 function selectCustomApp()
 {
-    $appArray = json_decode(getAppJason(),TRUE);
+    $appArray = json_decode(getAppJson(),TRUE);
     $ImagePath=JURI::base().'components/com_miniorange_oauth/assets/images/';
     ?> 
     <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3">
@@ -558,7 +558,7 @@ function configuration($OauthApp,$appLabel)
 {
     global $license_tab_link;
     $attribute = getAppDetails();
-    $appJson = json_decode(getAppJason(),true);
+    $appJson = json_decode(getAppJson(),true);
     $appData = json_decode(getAppData(),true);
     if($appJson[$appLabel]["guide"]!="")
     {
@@ -1712,7 +1712,7 @@ function moOAuthConfiguration()
 {
     global $license_tab_link;
     global $license_tab_link;
-    $appArray = json_decode(getAppJason(),TRUE);
+    $appArray = json_decode(getAppJson(),TRUE);
     $app = JFactory::getApplication();
     $get = $app->input->get->getArray();
     $attribute = getAppDetails();
@@ -2374,19 +2374,6 @@ function moImportAndExport()
                 </div> 
                 <div class="mo_boot_col-4">
                     <a href='index.php?option=com_miniorange_oauth&view=accountsetup&task=accountsetup.exportConfiguration' class="mo_boot_btn mo_boot_btn-primary mo_boot_float-right" style='padding:2px 5px'><?php echo JText::_('COM_MINIORANGE_OAUTH_EXPORT_CONFIGURATION');?></a>
-                </div>
-            </div>
-        </div> 
-        <div class="mo_boot_col-sm-12 mo_boot_mt-3"><hr> 
-            <strong>Upload Configuration</strong> <span><i style="color:coral" class="fa-solid fa-crown"></i></span>
-        </div>
-        <div class="mo_boot_col-12 mo_boot_mt-3">
-            <div class="mo_boot_row">
-                <div class="mo_boot_col-8">
-                    <input type="file" class="form-control-file mo_boot_d-inline" name="configuration_file" disabled="disabled">
-                </div>
-                <div class="mo_boot_col-4">
-                    <input id="mo_sp_exp_importconfig" type="submit" disabled="disabled" name="submit" style="float:right;cursor:not-allowed" class="mo_boot_btn mo_boot_btn-primary" value="Import Configuration"/>
                 </div>
             </div>
         </div>
