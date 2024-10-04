@@ -283,7 +283,7 @@ class plgSystemMiniorangeoauth extends JPlugin
         $query = $db->getQuery(true);
         $query->select('extension_id');
         $query->from('#__extensions');
-        $query->where($db->quoteName('name') . " = " . $db->quote('COM_MINIORANGE_OAUTH'));
+        $query->where($db->quoteName('name') . " = " . $db->quote('OPEN_OPENID_OAUTH'));
         $db->setQuery($query);
         $result = $db->loadColumn();
         $tables = JFactory::getDbo()->getTableList();

@@ -76,7 +76,7 @@ if(!JPluginHelper::isEnabled('system', 'miniorangeoauth')) {
         <div id="mo_oauth_nav_parent" class="mo_boot_col-sm-12 p-0 m-0" style="display:flex;">
             <a id="configtab" class="p-3  mo_nav-tab mo_nav_tab_<?php echo $oauth_active_tab == 'configuration' ? 'active' : ''; ?>" href="#configuration" onclick="add_css_tab('#configtab');" data-toggle="tab">
                 <span><i class="fa-solid fa-bars"> </i></span>
-                <?php echo JText::_('COM_MINIORANGE_OAUTH_TAB1_CONFIGURE_OAUTH');?>
+                <?php echo JText::_('OPEN_OPENID_OAUTH_TAB1_CONFIGURE_OAUTH');?>
             </a>
             <a id="attributetab" class="p-3 mo_nav-tab mo_nav_tab_<?php echo $oauth_active_tab == 'attrrolemapping' ? 'active' : ''; ?>" href="#attrrolemapping" onclick="add_css_tab('#attributetab');" data-toggle="tab">
                 <span><i class="fa-solid fa-address-card"></i></span>
@@ -479,7 +479,7 @@ function selectAppByIcon()
         <div class="mo_boot_col-sm-12 mo_boot_mt-4">
             <div class="mo_boot_row">
                 <div class="mo_boot_col-sm-11 m-0 p-0">
-                    <input type="text" class="mo_boot_form-control" name="appsearch" id="moAuthAppsearchInput" value="" placeholder="<?php echo JText::_('COM_MINIORANGE_OAUTH_SELECT_APP');?>">
+                    <input type="text" class="mo_boot_form-control" name="appsearch" id="moAuthAppsearchInput" value="" placeholder="<?php echo JText::_('OPEN_OPENID_OAUTH_SELECT_APP');?>">
                 </div>
                 <div class="mo_boot_col-sm-1 m-0 p-0 mo_boot_border mo_boot_btn-primary mo_boot_text-center mo_boot_align-middle">
                     <span class=""><i class="fa fa-search"></i></span>
@@ -494,9 +494,9 @@ function selectAppByIcon()
         <div class="mo_boot_col-sm-12 mo_boot_mt-4">
             <div class="mo_boot_row">
                 <div class="mo_boot_col-sm-12 mo_boot_my-2">
-                    <h6><?php echo JText::_('COM_MINIORANGE_OAUTH_CUSTOM_APPLICATIONS');?></h6>
+                    <h6><?php echo JText::_('OPEN_OPENID_OAUTH_CUSTOM_APPLICATIONS');?></h6>
                     <br>
-                    <span class="mo_boot_p-1 mo_boot_text-dark"><?php echo JText::_('COM_MINIORANGE_OAUTH_CUSTOM_APPLICATIONS_NOTE');?></span>
+                    <span class="mo_boot_p-1 mo_boot_text-dark"><?php echo JText::_('OPEN_OPENID_OAUTH_CUSTOM_APPLICATIONS_NOTE');?></span>
                 </div>
                 <div class="mo_boot_col-sm-6 mo_boot_my-5 mo_boot_text-center" moAuthAppSelector='moCustomOuth2App'>
                     <a class="mo_boot_select_app" href="<?php echo JRoute::_('index.php?option=com_miniorange_oauth&view=accountsetup&moAuthAddApp=other');?>">
@@ -524,9 +524,9 @@ function selectCustomApp()
     ?> 
     <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3">
         <div class="mo_boot_col-sm-12 mo_boot_my-2">
-            <h6><?php echo JText::_('COM_MINIORANGE_OAUTH_CUSTOM_APPLICATIONS');?></h6>
+            <h6><?php echo JText::_('OPEN_OPENID_OAUTH_CUSTOM_APPLICATIONS');?></h6>
             <br>
-            <span class="mo_boot_p-1 mo_boot_text-dark"><?php echo JText::_('COM_MINIORANGE_OAUTH_CUSTOM_APPLICATIONS_NOTE');?></span>
+            <span class="mo_boot_p-1 mo_boot_text-dark"><?php echo JText::_('OPEN_OPENID_OAUTH_CUSTOM_APPLICATIONS_NOTE');?></span>
         </div>
         <div class="mo_boot_col-sm-6 mo_boot_my-5 mo_boot_text-center" moAuthAppSelector='moCustomOuth2App'>
             <a class="mo_boot_select_app" href="<?php echo JRoute::_('index.php?option=com_miniorange_oauth&view=accountsetup&moAuthAddApp=other');?>">
@@ -678,7 +678,7 @@ function configuration($OauthApp,$appLabel)
                 <div  class="mo_boot_col-sm-12 m-0 p-0">
                     <div class="mo_boot_text-center">
                         <?php  echo "<a href='index.php?option=com_miniorange_oauth&view=accountsetup&task=accountsetup.clearConfig'
-                                    class='mo_boot_btn mo_boot_pb-1 mo_boot_btn-danger' style='padding:2px 5px'>".JText::_('COM_MINIORANGE_OAUTH_DELETE_APPLICATION')."</a>";
+                                    class='mo_boot_btn mo_boot_pb-1 mo_boot_btn-danger' style='padding:2px 5px'>".JText::_('OPEN_OPENID_OAUTH_DELETE_APPLICATION')."</a>";
                                 ?> 
                     </div>
                 </div>
@@ -710,7 +710,7 @@ function configuration($OauthApp,$appLabel)
                                 <div class="mo_boot_col-sm-12">
                                     <div class="mo_boot_row mo_boot_mt-3">
                                         <div class="mo_boot_col-sm-3">
-                                            <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_APPLICATION');?></strong>
+                                            <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('OPEN_OPENID_OAUTH_APPLICATION');?></strong>
                                         </div>
                                         <div class="mo_boot_col-sm-8">
                                             <?php echo "<span style='background:#e9ecef;cursor:not-allowed;padding:2px; border:1px solid #e9ecef'>".$OauthApp['label']."</span>";?>
@@ -719,7 +719,7 @@ function configuration($OauthApp,$appLabel)
                                     </div>
                                     <div class="mo_boot_row mo_boot_mt-3">
                                         <div class="mo_boot_col-sm-3">
-                                            <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_CALLBACK_URL');?></strong>
+                                            <strong><?php echo JText::_('OPEN_OPENID_OAUTH_CALLBACK_URL');?></strong>
                                         </div>
                                         <div class="mo_boot_col-sm-7">
                                             <form id="oauth_config_form_step1" method="post" action="<?php echo JRoute::_('index.php?option=com_miniorange_oauth&view=accountsetup&task=accountsetup.saveConfig'); ?>">  
@@ -744,7 +744,7 @@ function configuration($OauthApp,$appLabel)
                                             </em>
                                         </div>
                                         <div class="mo_boot_col-sm-12 mo_boot_mt-2">
-                                            <small><?php echo JText::_('COM_MINIORANGE_OAUTH_CALLBACK_URL_NOTE');?></small>
+                                            <small><?php echo JText::_('OPEN_OPENID_OAUTH_CALLBACK_URL_NOTE');?></small>
                                         </div>
                                     </div>
                                 </div>
@@ -797,18 +797,18 @@ function configuration($OauthApp,$appLabel)
                                 </div>
                                 <div class="mo_boot_row mo_boot_mt-3">
                                     <div class="mo_boot_col-sm-3">
-                                        <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_CLIENT_ID'); ?></strong>
+                                        <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('OPEN_OPENID_OAUTH_CLIENT_ID'); ?></strong>
                                     </div>
                                     <div class="mo_boot_col-sm-7">
-                                        <input placeholder="<?php echo JText::_('COM_MINIORANGE_OAUTH_CLIENT_ID_PLACEHOLDER');?>" class="mo_boot_form-control" required="" type="text" name="mo_oauth_client_id" id="mo_oauth_client_id" value='<?php echo $client_id; ?>'>
+                                        <input placeholder="<?php echo JText::_('OPEN_OPENID_OAUTH_CLIENT_ID_PLACEHOLDER');?>" class="mo_boot_form-control" required="" type="text" name="mo_oauth_client_id" id="mo_oauth_client_id" value='<?php echo $client_id; ?>'>
                                     </div>
                                 </div>
                                 <div class="mo_boot_row mo_boot_mt-3">
                                     <div class="mo_boot_col-sm-3">
-                                        <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_CLIENT_SECRET'); ?></strong>
+                                        <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('OPEN_OPENID_OAUTH_CLIENT_SECRET'); ?></strong>
                                     </div>
                                     <div class="mo_boot_col-sm-7">
-                                        <input placeholder="<?php echo JText::_('COM_MINIORANGE_OAUTH_CLIENT_SECRET_PLACEHOLDER');?>" class="mo_boot_form-control" type="text" id="mo_oauth_client_secret" name="mo_oauth_client_secret" value='<?php echo $client_secret; ?>'>
+                                        <input placeholder="<?php echo JText::_('OPEN_OPENID_OAUTH_CLIENT_SECRET_PLACEHOLDER');?>" class="mo_boot_form-control" type="text" id="mo_oauth_client_secret" name="mo_oauth_client_secret" value='<?php echo $client_secret; ?>'>
                                     </div>
                                 </div>
                                 <?php 
@@ -821,15 +821,15 @@ function configuration($OauthApp,$appLabel)
                                             {
                                                 if($value == 'Tenant')
                                                 {
-                                                    $placeholder = JText::_('COM_MINIORANGE_OAUTH_ENTER_THE_TENANT_ID');
+                                                    $placeholder = JText::_('OPEN_OPENID_OAUTH_ENTER_THE_TENANT_ID');
                                                 }
                                                 else if( $value=='Domain')
                                                 {
-                                                    $placeholder = JText::_('COM_MINIORANGE_OAUTH_ENTER_THE_DOMAIN');
+                                                    $placeholder = JText::_('OPEN_OPENID_OAUTH_ENTER_THE_DOMAIN');
                                                 }
                                                 else
                                                 {
-                                                    $placeholder = JText::_('COM_MINIORANGE_OAUTH_ENTER_THE_DETAILS').$value ;
+                                                    $placeholder = JText::_('OPEN_OPENID_OAUTH_ENTER_THE_DETAILS').$value ;
                                                 }
                                                 echo '<div class="mo_boot_row mo_boot_mt-3"><div class="mo_boot_col-sm-3">
                                                 <strong><span class="mo_oauth_highlight">*</span>'.$value.'</strong>
@@ -843,18 +843,18 @@ function configuration($OauthApp,$appLabel)
                                         { ?>
                                             <div class="mo_boot_row mo_boot_mt-3">
                                                 <div class="mo_boot_col-sm-3">
-                                                    <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_APP_SCOPE');?></strong>
+                                                    <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('OPEN_OPENID_OAUTH_APP_SCOPE');?></strong>
                                                 </div>
                                                 <div class="mo_boot_col-sm-7">
-                                                    <input class="mo_boot_form-control" placeholder="<?php echo JText::_('COM_MINIORANGE_OAUTH_APP_SCOPE_PLACEHOLDER');?>" type="text" id="mo_oauth_scope" name="mo_oauth_scope" value='<?php echo $app_scope ?>' required>
+                                                    <input class="mo_boot_form-control" placeholder="<?php echo JText::_('OPEN_OPENID_OAUTH_APP_SCOPE_PLACEHOLDER');?>" type="text" id="mo_oauth_scope" name="mo_oauth_scope" value='<?php echo $app_scope ?>' required>
                                                 </div>
                                             </div>
                                             <div class="mo_boot_row mo_boot_mt-3">
                                                 <div class="mo_boot_col-sm-3">
-                                                    <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_AUTHORIZE_ENDPOINT');?></strong>
+                                                    <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('OPEN_OPENID_OAUTH_AUTHORIZE_ENDPOINT');?></strong>
                                                 </div>
                                                 <div class="mo_boot_col-sm-7">
-                                                    <input class="mo_boot_form-control" placeholder="<?php echo JText::_('COM_MINIORANGE_OAUTH_AUTHORIZE_ENDPOINT_PLACEHOLDER');?>" type="text" id="mo_oauth_authorizeurl" name="mo_oauth_authorizeurl" value='<?php echo $appJson[$appLabel]["authorize"] ?>' required>
+                                                    <input class="mo_boot_form-control" placeholder="<?php echo JText::_('OPEN_OPENID_OAUTH_AUTHORIZE_ENDPOINT_PLACEHOLDER');?>" type="text" id="mo_oauth_authorizeurl" name="mo_oauth_authorizeurl" value='<?php echo $appJson[$appLabel]["authorize"] ?>' required>
                                                 </div>
                                                 <div class="mo_boot_col-sm-1">
                                                     <em class="fa fa-pull-right fa-lg fa-copy mo_copy copytooltip" ; onclick="copyToClipboard('#mo_oauth_authorizeurl');" style="color:red;background:#ccc;" ;>
@@ -864,10 +864,10 @@ function configuration($OauthApp,$appLabel)
                                             </div>
                                             <div class="mo_boot_row mo_boot_mt-3">
                                                 <div class="mo_boot_col-sm-3">
-                                                    <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_TOKEN_ENDPOINT'); ?></strong>
+                                                    <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('OPEN_OPENID_OAUTH_TOKEN_ENDPOINT'); ?></strong>
                                                 </div>
                                                 <div class="mo_boot_col-sm-7">
-                                                    <input class="mo_boot_form-control" placeholder="<?php echo JText::_('COM_MINIORANGE_OAUTH_TOKEN_ENDPOINT_PLACEHOLDER');?>" type="text" id="mo_oauth_accesstokenurl" name="mo_oauth_accesstokenurl" value='<?php echo $appJson[$appLabel]['token']; ?>' required>
+                                                    <input class="mo_boot_form-control" placeholder="<?php echo JText::_('OPEN_OPENID_OAUTH_TOKEN_ENDPOINT_PLACEHOLDER');?>" type="text" id="mo_oauth_accesstokenurl" name="mo_oauth_accesstokenurl" value='<?php echo $appJson[$appLabel]['token']; ?>' required>
                                                 </div>
                                                 <div class="mo_boot_col-sm-1">
                                                     <em class="fa fa-pull-right fa-lg fa-copy mo_copy copytooltip" onclick="copyToClipboard('#mo_oauth_accesstokenurl');" style="color:red;background:#ccc;" ;>
@@ -879,10 +879,10 @@ function configuration($OauthApp,$appLabel)
                                                 if(!isset($OauthApp['type']) || $OauthApp['type']=='oauth'){?>
                                                     <div class="mo_boot_row mo_boot_mt-3" id="mo_oauth_resourceownerdetailsurl_div">
                                                         <div class="mo_boot_col-sm-3">
-                                                            <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_INFO_ENDPOINT'); ?></strong>
+                                                            <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('OPEN_OPENID_OAUTH_INFO_ENDPOINT'); ?></strong>
                                                         </div>
                                                         <div class="mo_boot_col-sm-7">
-                                                            <input class="mo_boot_form-control" placeholder="<?php echo JText::_('COM_MINIORANGE_OAUTH_INFO_ENDPOINT_PLACEHOLDER');?>" type="text" id="mo_oauth_resourceownerdetailsurl" name="mo_oauth_resourceownerdetailsurl" value='<?php echo $appJson[$appLabel]['userinfo']; ?>' required>
+                                                            <input class="mo_boot_form-control" placeholder="<?php echo JText::_('OPEN_OPENID_OAUTH_INFO_ENDPOINT_PLACEHOLDER');?>" type="text" id="mo_oauth_resourceownerdetailsurl" name="mo_oauth_resourceownerdetailsurl" value='<?php echo $appJson[$appLabel]['userinfo']; ?>' required>
                                                         </div>
                                                         <div class="mo_boot_col-sm-1">
                                                             <em class="fa fa-pull-right fa-lg fa-copy mo_copy copytooltip" onclick="copyToClipboard('#mo_oauth_resourceownerdetailsurl');" style="color:red;background:#ccc;" ;>
@@ -897,15 +897,15 @@ function configuration($OauthApp,$appLabel)
                                     { ?>
                                         <div class="mo_boot_row mo_boot_mt-3">
                                             <div class="mo_boot_col-sm-3">
-                                                <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_APP_SCOPE');?></strong>
+                                                <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('OPEN_OPENID_OAUTH_APP_SCOPE');?></strong>
                                             </div>
                                             <div class="mo_boot_col-sm-7">
-                                                <input class="mo_boot_form-control" placeholder="<?php echo JText::_('COM_MINIORANGE_OAUTH_APP_SCOPE_PLACEHOLDER');?>" type="text" id="mo_oauth_scope" name="mo_oauth_scope" value='<?php echo $app_scope ?>' required>
+                                                <input class="mo_boot_form-control" placeholder="<?php echo JText::_('OPEN_OPENID_OAUTH_APP_SCOPE_PLACEHOLDER');?>" type="text" id="mo_oauth_scope" name="mo_oauth_scope" value='<?php echo $app_scope ?>' required>
                                             </div>
                                         </div>
                                         <div class="mo_boot_row mo_boot_mt-3">
                                             <div class="mo_boot_col-sm-3">
-                                                <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_AUTHORIZE_ENDPOINT'); ?></strong>
+                                                <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('OPEN_OPENID_OAUTH_AUTHORIZE_ENDPOINT'); ?></strong>
                                             </div>
                                             <div class="mo_boot_col-sm-7">
                                                 <input class="mo_boot_form-control" type="text" id="mo_oauth_authorizeurl" name="mo_oauth_authorizeurl" value='<?php echo $authorize_endpoint; ?>' required>
@@ -918,7 +918,7 @@ function configuration($OauthApp,$appLabel)
                                         </div>
                                         <div class="mo_boot_row mo_boot_mt-3">
                                             <div class="mo_boot_col-sm-3">
-                                                <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_TOKEN_ENDPOINT'); ?></strong>
+                                                <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('OPEN_OPENID_OAUTH_TOKEN_ENDPOINT'); ?></strong>
                                             </div>
                                             <div class="mo_boot_col-sm-7">
                                                 <input class="mo_boot_form-control" type="text" id="mo_oauth_accesstokenurl" name="mo_oauth_accesstokenurl" value='<?php echo $access_token_endpoint; ?>' required>
@@ -933,7 +933,7 @@ function configuration($OauthApp,$appLabel)
                                             if(!isset($OauthApp['type']) || $OauthApp['type']=='oauth'){?>
                                                 <div class="mo_boot_row mo_boot_mt-3" id="mo_oauth_resourceownerdetailsurl_div">
                                                     <div class="mo_boot_col-sm-3">
-                                                        <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_INFO_ENDPOINT'); ?></strong>
+                                                        <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('OPEN_OPENID_OAUTH_INFO_ENDPOINT'); ?></strong>
                                                     </div>
                                                     <div class="mo_boot_col-sm-7">
                                                         <input class="mo_boot_form-control" type="text" id="mo_oauth_resourceownerdetailsurl" name="mo_oauth_resourceownerdetailsurl" value='<?php echo $user_info_endpoint; ?>' required>
@@ -949,11 +949,11 @@ function configuration($OauthApp,$appLabel)
                                 ?>    
                                 <div class="mo_boot_row mo_boot_mt-3">
                                     <div class="mo_boot_col-sm-3">
-                                        <b><?php echo JText::_('COM_MINIORANGE_OAUTH_SET_CLIENT_CREDENTIALS');?></b>
+                                        <b><?php echo JText::_('OPEN_OPENID_OAUTH_SET_CLIENT_CREDENTIALS');?></b>
                                     </div>
                                     <div class="mo_boot_col-sm-7">
-                                        <input type="checkbox" style='vertical-align: -2px;' name="mo_oauth_in_header" value="1" <?php echo " ".$mo_oauth_in_header; ?>>&nbsp;<?php echo JText::_('COM_MINIORANGE_OAUTH_SET_CREDENTIAL_IN_HEADER');?>
-                                        <input type="checkbox" style='vertical-align: -2px;' class="mo_table_textbox" name="mo_oauth_body" value="1" <?php echo " ".$mo_oauth_in_body; ?> >&nbsp; <?php echo JText::_('COM_MINIORANGE_OAUTH_SET_CREDENTIAL_IN_BODY');?>
+                                        <input type="checkbox" style='vertical-align: -2px;' name="mo_oauth_in_header" value="1" <?php echo " ".$mo_oauth_in_header; ?>>&nbsp;<?php echo JText::_('OPEN_OPENID_OAUTH_SET_CREDENTIAL_IN_HEADER');?>
+                                        <input type="checkbox" style='vertical-align: -2px;' class="mo_table_textbox" name="mo_oauth_body" value="1" <?php echo " ".$mo_oauth_in_body; ?> >&nbsp; <?php echo JText::_('OPEN_OPENID_OAUTH_SET_CREDENTIAL_IN_BODY');?>
                                     </div>
                                 </div>
                             </div>
@@ -1007,14 +1007,14 @@ function configuration($OauthApp,$appLabel)
                     <form id="oauth_mapping_form" name="oauth_config_form" method="post" action="<?php echo JRoute::_('index.php?option=com_miniorange_oauth&view=accountsetup&task=accountsetup.saveMapping'); ?>">
                         <div class="mo_boot_row mo_boot_mt-3">
                             <div class="mo_boot_col-sm-3">
-                                <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_EMAIL_ATTR'); ?></strong>
+                                <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('OPEN_OPENID_OAUTH_EMAIL_ATTR'); ?></strong>
                             </div>
                             <div class="mo_boot_col-sm-7">
                                 <?php
                                     if (count($attributesNames) != 0 && count($attributesNames) != 1 ) {
                                         ?>
                                         <select required class="mo_boot_form-control mo_boot_h-100" name="mo_oauth_email_attr" id="mo_oauth_email_attr">
-                                            <option value="none" selected><?php echo JText::_('COM_MINIORANGE_OAUTH_EMAIL_ATTR_NOTE');?></option>
+                                            <option value="none" selected><?php echo JText::_('OPEN_OPENID_OAUTH_EMAIL_ATTR_NOTE');?></option>
                                             <?php
                                                 foreach($attributesNames as $key => $value)
                                                 {
@@ -1043,7 +1043,7 @@ function configuration($OauthApp,$appLabel)
                         </div>
                         <div class="mo_boot_row mo_boot_mt-2">
                             <div class="mo_boot_col-sm-3">
-                                <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_FIRST_NAME_ATTR'); ?></strong>
+                                <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('OPEN_OPENID_OAUTH_FIRST_NAME_ATTR'); ?></strong>
                             </div>
                             <div class="mo_boot_col-sm-7">
                                 <?php
@@ -1051,7 +1051,7 @@ function configuration($OauthApp,$appLabel)
                                     {
                                         ?>
                                         <select required class="mo_boot_form-control mo_boot_h-100" name="mo_oauth_first_name_attr" id="mo_oauth_first_name_attr">
-                                            <option value="none" selected><?php echo JText::_('COM_MINIORANGE_OAUTH_FIRST_NAME_ATTR_NOTE');?></option>
+                                            <option value="none" selected><?php echo JText::_('OPEN_OPENID_OAUTH_FIRST_NAME_ATTR_NOTE');?></option>
                                             <?php
                                                 foreach($attributesNames as $key => $value)
                                                 {
@@ -1107,10 +1107,10 @@ function configuration($OauthApp,$appLabel)
                 <div class=" mo_boot_col-sm-12 mo_boot_mt-5">
                     <div class="mo_boot_row mo_boot_mt-3 mo_boot_mb-5">
                         <div class="mo_boot_col-sm-12 mo_boot_mb-3">
-                            <?php echo JText::_('COM_MINIORANGE_OAUTH_LOGIN_URL_NOTE');?>
+                            <?php echo JText::_('OPEN_OPENID_OAUTH_LOGIN_URL_NOTE');?>
                         </div>
                         <div class="mo_boot_col-sm-3">
-                            <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_LOGIN_URL');?></strong>
+                            <strong><?php echo JText::_('OPEN_OPENID_OAUTH_LOGIN_URL');?></strong>
                         </div>
                         <div class="mo_boot_col-sm-8">
                             <input class="mo_boot_form-control" id="loginUrl" type="text" readonly="true" value='<?php echo JURI::root() . '?morequest=oauthredirect&app_name=' . $mo_oauth_app; ?>'>
@@ -1391,7 +1391,7 @@ function attributerole()
                             </div>
                             <div class="mo_boot_row mo_boot_mt-2">
                                 <div class="mo_boot_col-sm-12 mo_boot_mt-3 mo_boot_text-right">
-                                    <input type="submit" disabled style="cursor:not-allowed" name="send_query" value='<?php echo JText::_('COM_MINIORANGE_OAUTH_SAVE_ATTRIBUTE_MAPPING');?>' style="margin-bottom:3%;" class="mo_boot_btn mo_boot_btn-primary p-2"/>
+                                    <input type="submit" disabled style="cursor:not-allowed" name="send_query" value='<?php echo JText::_('OPEN_OPENID_OAUTH_SAVE_ATTRIBUTE_MAPPING');?>' style="margin-bottom:3%;" class="mo_boot_btn mo_boot_btn-primary p-2"/>
                                 </div>
                             </div>
                         </div>
@@ -1402,13 +1402,13 @@ function attributerole()
             <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3" style="display:none" id="mo_profile_mapping">
                 <div class="mo_boot_col-sm-12 mo_boot_mt-3"> 
                     <h5 class="element"> 
-                        <?php echo JText::_('COM_MINIORANGE_OAUTH_MAP_JOOMLA_USER_PROFILE_ATTRIBUTES');?>
+                        <?php echo JText::_('OPEN_OPENID_OAUTH_MAP_JOOMLA_USER_PROFILE_ATTRIBUTES');?>
                         <a href="https://developers.miniorange.com/docs/oauth-joomla/attribute-mapping" target="_blank" class="mo_handbook" ><sup><i class="fa-regular fa-circle-question" title="What is Profile attribute mapping?"></i></sup></a>
                     </h5>
                     <hr>
                 </div>
                 <div class="mo_boot_col-sm-12 mo_boot_mt-2">
-                    <p class="alert alert-info" style="color: #151515;"><?php echo JText::_('COM_MINIORANGE_OAUTH_MAP_JOOMLA_USER_PROFILE_ATTRIBUTES_NOTE');?> <a href='<?php echo $license_tab_link;?>' class='mo_oauth_coming_soon_features premium'><strong>Premium </a> </strong>and <a href='<?php echo $license_tab_link;?>' class='mo_oauth_coming_soon_features premium'> <strong>Enterprise</strong></a> versions of plugin.</p>
+                    <p class="alert alert-info" style="color: #151515;"><?php echo JText::_('OPEN_OPENID_OAUTH_MAP_JOOMLA_USER_PROFILE_ATTRIBUTES_NOTE');?> <a href='<?php echo $license_tab_link;?>' class='mo_oauth_coming_soon_features premium'><strong>Premium </a> </strong>and <a href='<?php echo $license_tab_link;?>' class='mo_oauth_coming_soon_features premium'> <strong>Enterprise</strong></a> versions of plugin.</p>
                 </div>
                 <div class="mo_boot_col-sm-12 mo_boot_my-4">
                     <div class="mo_boot_row mo_boot_my-3">
@@ -1419,10 +1419,10 @@ function attributerole()
                     </div>
                     <div class="mo_boot_row">
                         <div class="mo_boot_col-sm-6">
-                            <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_USER_PROFILE_ATTRIBUTE');?></strong>
+                            <strong><?php echo JText::_('OPEN_OPENID_OAUTH_USER_PROFILE_ATTRIBUTE');?></strong>
                         </div>
                         <div class="mo_boot_col-sm-6">
-                            <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_SERVER_ATTRIBUTE');?></strong>
+                            <strong><?php echo JText::_('OPEN_OPENID_OAUTH_SERVER_ATTRIBUTE');?></strong>
                         </div>
                     </div>
                     <div class="mo_boot_row m-0 p-0 mo_boot_my-3">
@@ -1483,13 +1483,13 @@ function attributerole()
             <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3" style="display:none" id="mo_field_mapping">
                 <div class="mo_boot_col-sm-12 mo_boot_mt-3">
                     <h5 class="element">
-                        <?php echo JText::_('COM_MINIORANGE_OAUTH_MAP_JOOMLA_USER_FIELD_ATTRIBUTES');?>
+                        <?php echo JText::_('OPEN_OPENID_OAUTH_MAP_JOOMLA_USER_FIELD_ATTRIBUTES');?>
                         <a href="https://developers.miniorange.com/docs/oauth-joomla/attribute-mapping" target="_blank" class="mo_handbook" ><sup><i class="fa-regular fa-circle-question" title="What is Field attribute mapping?"></i></sup></a>
                     </h3>
                     <hr>
                 </div>
                 <div class="mo_boot_col-sm-12 mo_boot_mt-2">
-                    <p class="alert alert-info" style="color: #151515;"><?php echo JText::_('COM_MINIORANGE_OAUTH_MAP_JOOMLA_USER_FIELD_ATTRIBUTES_NOTE');?></p>
+                    <p class="alert alert-info" style="color: #151515;"><?php echo JText::_('OPEN_OPENID_OAUTH_MAP_JOOMLA_USER_FIELD_ATTRIBUTES_NOTE');?></p>
                 </div>
                 <div class="mo_boot_row">
                     <div class="mo_boot_col-sm-12">
@@ -1500,10 +1500,10 @@ function attributerole()
                 <div class="mo_boot_col-sm-12 mo_boot_my-3">
                     <div class="mo_boot_row mo_boot_mt-2">
                         <div class="mo_boot_col-sm-6">
-                            <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_USER_FIELD_ATTRIBUTE');?></strong>
+                            <strong><?php echo JText::_('OPEN_OPENID_OAUTH_USER_FIELD_ATTRIBUTE');?></strong>
                         </div>
                         <div class="mo_boot_col-sm-6">
-                            <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_SERVER_ATTRIBUTE');?></strong>
+                            <strong><?php echo JText::_('OPEN_OPENID_OAUTH_SERVER_ATTRIBUTE');?></strong>
                         </div>
                     </div>
                     <div class="mo_boot_row m-0 p-0 mo_boot_my-3">
@@ -1540,18 +1540,18 @@ function attributerole()
                     <div class="mo_boot_row mo_boot_my-3">
                         <div class="mo_boot_col-sm-12 mo_boot_mt-3">
                             <h5 class="element">
-                                <?php echo JText::_('COM_MINIORANGE_OAUTH_GROUP_MAPPING');?>
+                                <?php echo JText::_('OPEN_OPENID_OAUTH_GROUP_MAPPING');?>
                                 <a href="https://developers.miniorange.com/docs/oauth-joomla/role-mapping" target="_blank" class="mo_handbook" ><sup><i class="fa-regular fa-circle-question" title="What is Group/Role mapping?"></i></sup></a>
                             </h5>
                             <hr>
-                            <p><?php echo JText::_('COM_MINIORANGE_OAUTH_GROUP_MAPPING_NOTE');?></p>
+                            <p><?php echo JText::_('OPEN_OPENID_OAUTH_GROUP_MAPPING_NOTE');?></p>
                         </div>
                     </div>
                 </div>
                 <div class="mo_boot_col-sm-12 mo_boot_my-4">
                     <div class="mo_boot_row">
                         <div class="mo_boot_col-sm-4">
-                            <p><?php echo JText::_('COM_MINIORANGE_OAUTH_SELECT_DEFAULT_GROUP_FOR_NEW_USER');?></p>
+                            <p><?php echo JText::_('OPEN_OPENID_OAUTH_SELECT_DEFAULT_GROUP_FOR_NEW_USER');?></p>
                         </div>
                         <div class="mo_boot_col-sm-8">
                             <?php
@@ -1577,10 +1577,10 @@ function attributerole()
                 <div class="mo_boot_col-sm-12 mo_boot_mt-2">
                     <div class="mo_boot_row mo_boot_mt-2">
                         <div class="mo_boot_col-sm-4">
-                            <p><?php echo JText::_('COM_MINIORANGE_OAUTH_GROUP_ATTRIBUTE_NAMES');?></p>
+                            <p><?php echo JText::_('OPEN_OPENID_OAUTH_GROUP_ATTRIBUTE_NAMES');?></p>
                         </div>
                         <div class="mo_boot_col-sm-8">
-                            <input class="mo_boot_form-control" placeholder="<?php echo JText::_('COM_MINIORANGE_OAUTH_GROUP_ATTRIBUTE_NAMES_PLACEHOLDER');?>" type="text" id="mo_oauth_gname_attr" name="mo_oauth_gname_attr" value='' disabled>
+                            <input class="mo_boot_form-control" placeholder="<?php echo JText::_('OPEN_OPENID_OAUTH_GROUP_ATTRIBUTE_NAMES_PLACEHOLDER');?>" type="text" id="mo_oauth_gname_attr" name="mo_oauth_gname_attr" value='' disabled>
                         </div>
                     </div>
                     <hr class="bg-dark">
@@ -1588,10 +1588,10 @@ function attributerole()
                 <div class=" mo_boot_col-sm-12 mo_boot_my-2">
                     <div class="mo_boot_row mo_boot_mt-3">
                         <div class="mo_boot_col-sm-4">
-                            <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_GROUP_NAME_IN_JOOMLA');?></strong>
+                            <strong><?php echo JText::_('OPEN_OPENID_OAUTH_GROUP_NAME_IN_JOOMLA');?></strong>
                         </div>
                         <div class="mo_boot_col-sm-8">
-                            <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_GROUP_ROLE_NAME_IN_CONFIGURED_APP');?></strong>
+                            <strong><?php echo JText::_('OPEN_OPENID_OAUTH_GROUP_ROLE_NAME_IN_CONFIGURED_APP');?></strong>
                         </div>
                     </div>
                     <div class="mo_boot_row mo_boot_mt-3">
@@ -1600,7 +1600,7 @@ function attributerole()
                             if (empty($role_mapping_key_value)) {
                                 foreach ($groups as $group) {
                                     if ($group[4] != 'Super Users') {
-                                        echo '<div class="mo_boot_col-sm-4 mo_boot_mt-2">' . $group[4] . '</div><div class="mo_boot_col-sm-8 mo_boot_mt-2"><input class="mo_boot_form-control"  disabled type="text" id="oauth_group_attr_values' . $group[0] . '" name="oauth_group_attr_values' . $group[0] . '" value= "" placeholder="'.JText::_('COM_MINIORANGE_OAUTH_GROUP_ROLE_NAME_IN_CONFIGURED_APP_PLACEHOLDER'). $group[4] . '" "' . ' /></div>';
+                                        echo '<div class="mo_boot_col-sm-4 mo_boot_mt-2">' . $group[4] . '</div><div class="mo_boot_col-sm-8 mo_boot_mt-2"><input class="mo_boot_form-control"  disabled type="text" id="oauth_group_attr_values' . $group[0] . '" name="oauth_group_attr_values' . $group[0] . '" value= "" placeholder="'.JText::_('OPEN_OPENID_OAUTH_GROUP_ROLE_NAME_IN_CONFIGURED_APP_PLACEHOLDER'). $group[4] . '" "' . ' /></div>';
                                     }
                                 }
                             }
@@ -1611,7 +1611,7 @@ function attributerole()
                                     if ($group[4] != 'Super Users')
                                     {
                                         $role_value = array_key_exists($group[0], $role_mapping_key_value) ? $role_mapping_key_value[$group[0]] : "";
-                                        echo '<div class="mo_boot_col-sm-4 mo_boot_offset-sm-1"><strong>' . $group[4] . '</strong></div><div class="mo_boot_col-sm-6"><input  class="mo_boot_form-control"  disabled type="text" id="oauth_group_attr_values' . $group[0] . '" name="oauth_group_attr_values' . $group[0] . '" value= "' . $role_value . '" placeholder="'.JText::_('COM_MINIORANGE_OAUTH_GROUP_ROLE_NAME_IN_CONFIGURED_APP_PLACEHOLDER'). $group[4] . '" "' . ' /></div>';
+                                        echo '<div class="mo_boot_col-sm-4 mo_boot_offset-sm-1"><strong>' . $group[4] . '</strong></div><div class="mo_boot_col-sm-6"><input  class="mo_boot_form-control"  disabled type="text" id="oauth_group_attr_values' . $group[0] . '" name="oauth_group_attr_values' . $group[0] . '" value= "' . $role_value . '" placeholder="'.JText::_('OPEN_OPENID_OAUTH_GROUP_ROLE_NAME_IN_CONFIGURED_APP_PLACEHOLDER'). $group[4] . '" "' . ' /></div>';
                                     }
                                 }
                             }
@@ -1670,17 +1670,17 @@ function attributerole()
                             <label class=" mo_oauth_switch" id=" mo_oauth_switch">
                                 <input disabled type="checkbox" name=" mo_oauth_custom_checkbox" id=" mo_oauth_check">
                                 <span id="mo_oauth_slider" class="mo_oauth_slider round"></span>
-                            </label> <?php echo JText::_('COM_MINIORANGE_OAUTH_DO_NOT_UPDATE_EXISTING_USER_GROUPS');?>
+                            </label> <?php echo JText::_('OPEN_OPENID_OAUTH_DO_NOT_UPDATE_EXISTING_USER_GROUPS');?>
                             <br>
                             <label class=" mo_oauth_switch" id=" mo_oauth_switch">
                                 <input disabled type="checkbox" name=" mo_oauth_custom_checkbox" id=" mo_oauth_check">
                                 <span id="mo_oauth_slider" class="mo_oauth_slider round"></span>
-                            </label> <?php echo JText::_('COM_MINIORANGE_OAUTH_DO_NOT_UPDATE_EXISTING_USER_GROUPS_AND_NEWLY_MAPPED_ROLES');?>
+                            </label> <?php echo JText::_('OPEN_OPENID_OAUTH_DO_NOT_UPDATE_EXISTING_USER_GROUPS_AND_NEWLY_MAPPED_ROLES');?>
                             <br>
                             <label class=" mo_oauth_switch" id=" mo_oauth_switch">
                                 <input disabled type="checkbox" name=" mo_oauth_custom_checkbox" id=" mo_oauth_check">
                                 <span id="mo_oauth_slider" class="mo_oauth_slider round"></span>
-                            </label> <?php echo JText::_('COM_MINIORANGE_OAUTH_DO_NOT_AUTO_CREATE_USERS_IF_ROLES_NOT_MAPPED');?>
+                            </label> <?php echo JText::_('OPEN_OPENID_OAUTH_DO_NOT_AUTO_CREATE_USERS_IF_ROLES_NOT_MAPPED');?>
                             <br>
                         </div>
                     </div>
@@ -1922,7 +1922,7 @@ function loginlogoutsettings()
                                     <label class=" mo_oauth_switch" id=" mo_oauth_switch">
                                         <input type="checkbox" name="mo_oauth_auto_redirect" id="mo_oauth_auto_redirect" value="1" disabled/>
                                         <span id="mo_oauth_slider" class="mo_oauth_slider round"></span>
-                                    </label> <span><?php echo JText::_('COM_MINIORANGE_OAUTH_RESTRICT_ANNONYMOUS_ACCESS');?></span>
+                                    </label> <span><?php echo JText::_('OPEN_OPENID_OAUTH_RESTRICT_ANNONYMOUS_ACCESS');?></span>
                                     <br><br>
                                 </div>
                             </div>
@@ -1951,7 +1951,7 @@ function loginlogoutsettings()
             <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3" style="display:none" id="mo_domain_restriction">
                 <div class="mo_boot_col-sm-12 mo_boot_mt-3"> 
                     <h5 class="element"> 
-                        <?php echo JText::_('COM_MINIORANGE_OAUTH_DOMAIN_SETTINGS');?><i style="color:coral" class="fa-solid fa-crown"></i>
+                        <?php echo JText::_('OPEN_OPENID_OAUTH_DOMAIN_SETTINGS');?><i style="color:coral" class="fa-solid fa-crown"></i>
                         <a href="https://developers.miniorange.com/docs/oauth-joomla/advanced-setting" target="_blank" class="mo_handbook" ><sup><i class="fa-regular fa-circle-question" title="What is Domain restriction?"></i></sup></a>
                     </h5>
                     <hr>
@@ -1962,20 +1962,20 @@ function loginlogoutsettings()
                 <div class="mo_boot_col-sm-12 mo_boot_my-4">
                     <div class="mo_boot_row mo_boot_m-1 mo_boot_mt-5">
                         <div class="mo_boot_col-sm-3">
-                            <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_RESTRICTED_DOMAINS');?></strong>
+                            <strong><?php echo JText::_('OPEN_OPENID_OAUTH_RESTRICTED_DOMAINS');?></strong>
                         </div>
                         <div class="mo_boot_col-sm-8">
                             <textarea style="width:100%" name="" id="" rows="6" id="mo_oauth_restricted_domains" name="mo_oauth_restricted_domains" value='' disabled placeholder="Enter the domain names here (Comma seprated). Example:domain1.com, domain2.com, etc.."></textarea>
-                            <p><em><?php echo JText::_('COM_MINIORANGE_OAUTH_RESTRICTED_DOMAINS_NOTE');?></em></p>
+                            <p><em><?php echo JText::_('OPEN_OPENID_OAUTH_RESTRICTED_DOMAINS_NOTE');?></em></p>
                         </div>
                     </div>
                     <div class="mo_boot_row mo_boot_m-1 mo_boot_mt-2">
                         <div class="mo_boot_col-sm-3">
-                            <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_ALLOWED_DOMAINS');?></strong>
+                            <strong><?php echo JText::_('OPEN_OPENID_OAUTH_ALLOWED_DOMAINS');?></strong>
                         </div>
                         <div class="mo_boot_col-sm-8">
                             <textarea style="width:100%" name="" id="" rows="6" value='' disabled placeholder="Enter the domain names here (Comma seprated). Example:domain1.com, domain2.com, etc.."></textarea>
-                            <p><em><?php echo JText::_('COM_MINIORANGE_OAUTH_ALLOWED_DOMAINS_NOTE');?></em></p>
+                            <p><em><?php echo JText::_('OPEN_OPENID_OAUTH_ALLOWED_DOMAINS_NOTE');?></em></p>
                         </div>
                     </div>
                     <div class="mo_boot_row mo_boot_mt-2">
@@ -1999,20 +1999,20 @@ function loginlogoutsettings()
                 <div class="mo_boot_col-sm-12 mo_boot_my-3">
                     <div class="mo_boot_row mo_boot_m-1 mo_boot_mt-5">
                         <div class="mo_boot_col-sm-3">
-                            <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_LOGIN_REDIRECT_URL');?></strong>
+                            <strong><?php echo JText::_('OPEN_OPENID_OAUTH_LOGIN_REDIRECT_URL');?></strong>
                         </div>
                         <div class="mo_boot_col-sm-8">
                             <input class="mo_boot_form-control" type="text" value='' disabled placeholder="Enter the URI you want to redirect the user after SSO">
-                            <p><em><?php echo JText::_('COM_MINIORANGE_OAUTH_LOGIN_REDIRECT_URL_NOTE');?></em></p>
+                            <p><em><?php echo JText::_('OPEN_OPENID_OAUTH_LOGIN_REDIRECT_URL_NOTE');?></em></p>
                         </div>
                     </div>
                     <div class="mo_boot_row mo_boot_m-1 mo_boot_mt-2">
                         <div class="mo_boot_col-sm-3">
-                            <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_LOGOUT_REDIRECT_URL');?></strong>
+                            <strong><?php echo JText::_('OPEN_OPENID_OAUTH_LOGOUT_REDIRECT_URL');?></strong>
                         </div>
                         <div class="mo_boot_col-sm-8">
                             <input class="mo_boot_form-control" type="text" value='' disabled placeholder="Enter the URI you want to redirect the user after logout">
-                            <p><em><?php echo JText::_('COM_MINIORANGE_OAUTH_LOGOUT_REDIRECT_URL_NOTE');?></em></p>
+                            <p><em><?php echo JText::_('OPEN_OPENID_OAUTH_LOGOUT_REDIRECT_URL_NOTE');?></em></p>
                         </div>
                     </div>
                     <div class="mo_boot_row mo_boot_mt-2">
@@ -2237,7 +2237,7 @@ function loginlogoutsettings()
                     <div class="mo_boot_row mo_boot_my-3">
                         <div class="mo_boot_col-sm-12 mo_boot_mt-3">
                             <h5 class="element">
-                                <?php echo JText::_('COM_MINIORANGE_OAUTH_CUSTOMIZE_ICON');?> <i style="color:coral" class="fa-solid fa-crown"></i>
+                                <?php echo JText::_('OPEN_OPENID_OAUTH_CUSTOMIZE_ICON');?> <i style="color:coral" class="fa-solid fa-crown"></i>
                                 <a href="https://developers.miniorange.com/docs/oauth-joomla/advanced-setting" target="_blank" class="mo_handbook" ><sup><i class="fa-regular fa-circle-question" title="How to create a SSO button and Customize it?"></i></sup></a>
                             </h5>
                         </div>
@@ -2246,12 +2246,12 @@ function loginlogoutsettings()
                 <div class="mo_boot_col-sm-12">
                     <div class="mo_boot_row mo_boot_m-1 mo_boot_mt-3">
                         <div class="mo_boot_col-sm-12">
-                            <p class="highlight"> <?php echo JText::_('COM_MINIORANGE_OAUTH_CUSTOMIZE_ICON_NOTE');?></p>
+                            <p class="highlight"> <?php echo JText::_('OPEN_OPENID_OAUTH_CUSTOMIZE_ICON_NOTE');?></p>
                         </div>
                         <div class="mo_boot_col-sm-12">
                             <div class="mo_boot_row mo_boot_my-2">
                                 <div class="mo_boot_col-sm-4">
-                                    <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_CUSTOMIZE_ICON_WIDTH');?></strong>
+                                    <strong><?php echo JText::_('OPEN_OPENID_OAUTH_CUSTOMIZE_ICON_WIDTH');?></strong>
                                 </div>
                                 <div class="mo_boot_col-sm-8">
                                     <input class="mo_boot_form-control" disabled type="text" placeholder="e.g. 200px or 100%">
@@ -2259,7 +2259,7 @@ function loginlogoutsettings()
                             </div>
                             <div class="mo_boot_row mo_boot_my-2">
                                 <div class="mo_boot_col-sm-4">
-                                    <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_CUSTOMIZE_ICON_HEIGHT');?></strong>
+                                    <strong><?php echo JText::_('OPEN_OPENID_OAUTH_CUSTOMIZE_ICON_HEIGHT');?></strong>
                                 </div>
                                 <div class="mo_boot_col-sm-8">
                                     <input class="mo_boot_form-control" disabled type="text"  placeholder="e.g. 50px or auto">
@@ -2267,7 +2267,7 @@ function loginlogoutsettings()
                             </div>
                             <div class="mo_boot_row mo_boot_my-2">
                                 <div class="mo_boot_col-sm-4">
-                                    <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_CUSTOMIZE_ICON_MARGINS');?></strong>
+                                    <strong><?php echo JText::_('OPEN_OPENID_OAUTH_CUSTOMIZE_ICON_MARGINS');?></strong>
                                 </div>
                                 <div class="mo_boot_col-sm-8">
                                     <input class="mo_boot_form-control" disabled type="text" placeholder="e.g. 2px 0px or auto">
@@ -2275,19 +2275,19 @@ function loginlogoutsettings()
                             </div>
                             <div class="mo_boot_row mo_boot_my-2">
                                 <div class="mo_boot_col-sm-4">
-                                    <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_CUSTOMIZE_ICON_CSS');?></strong>
+                                    <strong><?php echo JText::_('OPEN_OPENID_OAUTH_CUSTOMIZE_ICON_CSS');?></strong>
                                 </div>
                                 <div class="mo_boot_col-sm-8">
-                                    <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_CUSTOMIZE_ICON_CSS_EXAMPLE');?></strong>
+                                    <strong><?php echo JText::_('OPEN_OPENID_OAUTH_CUSTOMIZE_ICON_CSS_EXAMPLE');?></strong>
                                     <textarea disabled type="text" style="resize: vertical;width:100%;"  rows="6">.oauthloginbutton{background: #7272dc;height:40px;padding:8px;text-align:center;color:#fff;}</textarea>
                                 </div>
                             </div>
                             <div class="mo_boot_row">
                                 <div class="mo_boot_col-sm-4">
-                                    <strong><?php echo JText::_('COM_MINIORANGE_OAUTH_CUSTOMIZE_ICON_BUTTON');?></strong>
+                                    <strong><?php echo JText::_('OPEN_OPENID_OAUTH_CUSTOMIZE_ICON_BUTTON');?></strong>
                                 </div>
                                 <div class="mo_boot_col-sm-8">
-                                    <input class="mo_boot_form-control" disabled type="text" style="resize: vertical;width:100%;" placeholder ="Logout"> <?php echo JText::_('COM_MINIORANGE_OAUTH_CUSTOMIZE_ICON_BUTTON_EXAMPLE');?>
+                                    <input class="mo_boot_form-control" disabled type="text" style="resize: vertical;width:100%;" placeholder ="Logout"> <?php echo JText::_('OPEN_OPENID_OAUTH_CUSTOMIZE_ICON_BUTTON_EXAMPLE');?>
                                 </div>
                             </div>
                         </div>
@@ -2304,7 +2304,7 @@ function loginlogoutsettings()
                     <div class="mo_boot_row mo_boot_my-3">
                         <div class="mo_boot_col-sm-12 mo_boot_mt-3">
                             <h5 class="element">
-                                <?php echo JText::_('COM_MINIORANGE_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS');?> <i style="color:coral" class="fa-solid fa-crown"></i>
+                                <?php echo JText::_('OPEN_OPENID_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS');?> <i style="color:coral" class="fa-solid fa-crown"></i>
                                 <a href="https://developers.miniorange.com/docs/oauth-joomla/advanced-setting" target="_blank" class="mo_handbook" ><sup><i class="fa-regular fa-circle-question" title="What is User analytics?"></i></sup></a>
                             </h5>
                         </div>
@@ -2315,8 +2315,8 @@ function loginlogoutsettings()
                         <div class="mo_boot_col-sm-12">
                             <div class="mo_boot_row mo_boot_mt-2">
                                 <div class="mo_boot_col-sm-12">
-                                    <input disabled type="button" class="mo_boot_btn mo_boot_btn-danger" id="cleartext" value="<?php echo JText::_('COM_MINIORANGE_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS_CLEAR_REPORTS');?>" style="float:right;cursor:not-allowed" />
-                                    <input disabled type="button" class="mo_boot_btn mo_boot_btn-primary" id="refreshtext" value="<?php echo JText::_('COM_MINIORANGE_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS_REFRESH');?>" style="float:right;margin-right:10px;cursor:not-allowed"/>
+                                    <input disabled type="button" class="mo_boot_btn mo_boot_btn-danger" id="cleartext" value="<?php echo JText::_('OPEN_OPENID_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS_CLEAR_REPORTS');?>" style="float:right;cursor:not-allowed" />
+                                    <input disabled type="button" class="mo_boot_btn mo_boot_btn-primary" id="refreshtext" value="<?php echo JText::_('OPEN_OPENID_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS_REFRESH');?>" style="float:right;margin-right:10px;cursor:not-allowed"/>
                                 </div>
                             </div>
                             <div class="mo_boot_row mo_boot_mt-3">
@@ -2324,10 +2324,10 @@ function loginlogoutsettings()
                                     <table class="mo_boot_table mo_boot_table-striped mo_boot_table-hover mo_boot_table-bordered">
                                         <thead>
                                             <tr>
-                                                <th><?php echo JText::_('COM_MINIORANGE_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS_USERNAME');?></th>
-                                                <th><?php echo JText::_('COM_MINIORANGE_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS_APPLICATION');?></th>
-                                                <th><?php echo JText::_('COM_MINIORANGE_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS_STATUS');?></th>
-                                                <th><?php echo JText::_('COM_MINIORANGE_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS_LOGIN_TIMESTAMP');?></th>
+                                                <th><?php echo JText::_('OPEN_OPENID_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS_USERNAME');?></th>
+                                                <th><?php echo JText::_('OPEN_OPENID_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS_APPLICATION');?></th>
+                                                <th><?php echo JText::_('OPEN_OPENID_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS_STATUS');?></th>
+                                                <th><?php echo JText::_('OPEN_OPENID_OAUTH_USER_ANALYTICS_AND_TRANSACTION_REPORTS_LOGIN_TIMESTAMP');?></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -2373,7 +2373,7 @@ function moImportAndExport()
                     <strong>Download Configuration: </strong>
                 </div> 
                 <div class="mo_boot_col-4">
-                    <a href='index.php?option=com_miniorange_oauth&view=accountsetup&task=accountsetup.exportConfiguration' class="mo_boot_btn mo_boot_btn-primary mo_boot_float-right" style='padding:2px 5px'><?php echo JText::_('COM_MINIORANGE_OAUTH_EXPORT_CONFIGURATION');?></a>
+                    <a href='index.php?option=com_miniorange_oauth&view=accountsetup&task=accountsetup.exportConfiguration' class="mo_boot_btn mo_boot_btn-primary mo_boot_float-right" style='padding:2px 5px'><?php echo JText::_('OPEN_OPENID_OAUTH_EXPORT_CONFIGURATION');?></a>
                 </div>
             </div>
         </div>

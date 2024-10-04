@@ -47,6 +47,6 @@ class miniorangeoauthViewAccountSetup extends JViewLegacy
      */
     protected function addToolBar()
     {
-        JToolBarHelper::title(JText::_('COM_MINIORANGE_OAUTH_PLUGIN_TITLE'),'mo_oauth_logo mo_oauth_icon');
+        JToolBarHelper::title(JText::_('OPEN_OPENID_OAUTH_PLUGIN_TITLE'),'mo_oauth_logo mo_oauth_icon');
     }
 }

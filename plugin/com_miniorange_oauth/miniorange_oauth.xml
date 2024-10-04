@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.0" method="upgrade">
  
-	<name>COM_MINIORANGE_OAUTH</name>
+	<name>OPEN_OPENID_OAUTH</name>
 	<creationDate>Jan 2018</creationDate>
 	<author>miniOrange Security Software Pvt. Ltd.</author>
 	<authorEmail>info@xecurify.com</authorEmail>
@@ -9,7 +9,7 @@
 	<copyright>Copyright Info</copyright>
 	<license>GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html</license>
 	<version>3.0.1</version>
-	<description>COM_MINIORANGE_OAUTH_DESCRIPTION</description>
+	<description>OPEN_OPENID_OAUTH_DESCRIPTION</description>
  
 	<install> <!-- Runs on install -->
 		<sql>
@@ -28,7 +28,7 @@
     </update>
 	<administration>
 		<!-- Administration Menu Section -->
-		<menu link="option=com_miniorange_oauth&amp;view=accountsetup" view="accountsetup" alt="Joomla OAuth Client">COM_MINIORANGE_OAUTH_MENU</menu>
+		<menu link="option=com_miniorange_oauth&amp;view=accountsetup" view="accountsetup" alt="Joomla OAuth Client">OPEN_OPENID_OAUTH_MENU</menu>
 		<submenu>
 			<menu link="option=com_miniorange_oauth&amp;view=accountsetup&amp;tab-panel=configuration">Configure OAuth</menu>
 			<menu link="option=com_miniorange_oauth&amp;view=accountsetup&amp;tab-panel=attrrolemapping">User Mapping</menu>
