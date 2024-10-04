@@ -179,10 +179,6 @@ class plgSystemMiniorangeoauth extends JPlugin
                 $appdata = $this->miniOauthFetchDb('#__miniorange_oauth_config', array('custom_app'=>$appname));
                 if(is_null($appdata))
                     $appdata = $this->miniOauthFetchDb('#__miniorange_oauth_config', array('appname'=>$appname));
-                if ($appdata['userslim'] < $appdata['usrlmt'])
-                    $userslimitexeed = 0;
-                else
-                    $userslimitexeed = 1;
                 $currentapp = $appdata;
                 if (isset($appdata['email_attr']))
                     $email_attr = $appdata['email_attr'];
@@ -213,42 +209,7 @@ class plgSystemMiniorangeoauth extends JPlugin
                 $mo_oauth_handler->printError();
                 list($email,$name)=$this->getEmailAndName($resourceOwner,$email_attr,$name_attr);
                 $checkUser = $this->get_user_from_joomla($email);
-                //efficiency of the plugin
-                $sso_eff = $this->miniOauthFetchDb('#__miniorange_oauth_customer',array('id'=>'1'));
-                $db = JFactory::getDbo();
-                $query = $db->getQuery(true);
-                $fields = array(
-                    'dno_ssos'=>$sso_eff['dno_ssos'] + 1,
-                );
-                $conditions = array(
-                   'id' => '1'
-                );
-                $this->miniOauthUpdateDb('#__miniorange_oauth_customer',$fields,$conditions);
-                $thrs = 85400;
-                if ($sso_eff['previous_update'] == '' || time() > $sso_eff['previous_update'] + $thrs) 
-                {
-                    $tno_ssos = $sso_eff['tno_ssos'] + $sso_eff['dno_ssos'];
-                    $fields = array(
-                            'previous_update' =>time(),
-                            'dno_ssos' => 1,
-                            'tno_ssos'=>$tno_ssos,
-                    );
-                    $conditions = array('id'=>'1');
-                    $result = $this->miniOauthUpdateDb('#__miniorange_oauth_customer',$fields,$conditions);
-                    $dVar = new JConfig();
-                    $check_email = $dVar->mailfrom;
-                    if(isset($sso_eff['contact_admin_emiail']) && $sso_eff['contact_admin_emiail']!=NULL)
-                    {
-                        $check_email=$sso_eff['contact_admin_emiail'];
-                    }
-                    $base_url = JURI::root();
-                    $appname = '';
-                    $previous_update = date('m/d/Y H:i:s', intval($sso_eff['previous_update']));
-                    $dno_ssos = $sso_eff['dno_ssos'];
-                    require_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_miniorange_oauth' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'mo_customer_setup.php';
-                    $reason=$session->get('reason');
-                }
-                $result = $this->miniOauthFetchDb('#__miniorange_oauth_customer',array('id'=>'1'));
+
                 if ($checkUser) {
                     $this->loginCurrentUser($checkUser, $name, $email);
                 } 
@@ -337,7 +298,6 @@ class plgSystemMiniorangeoauth extends JPlugin
     {
         //TEST Configuration
         $session = JFactory::getSession();
-        $resultAttr = $this->miniOauthFetchDb('#__miniorange_oauth_config',array('id'=>'1'));
         $siteUrl=JURI::root();
         $siteUrl = $siteUrl . '/administrator/components/com_miniorange_oauth/assets/images/';
         if(isset($resourceOwner['email']))
