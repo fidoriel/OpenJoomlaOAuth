@@ -15,3 +15,9 @@ This is a example for Keycloak:
 ```
 
 You can add a `redirect_after_login` parameter to the link to set the redirect after login url. Make sure to url encode the value.
+
+For Joomla this could be:
+
+```html
+<p><a href="?morequest=oauthredirect&app_name=keycloak&redirect_after_login=https://example.com/index.php/news-intern/aktuelles"> <button>Login Mitgliederbereich mit SSO</button> </a></p>
+```
