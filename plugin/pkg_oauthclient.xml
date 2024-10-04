@@ -4,9 +4,9 @@
 	<packagename>oauthclient</packagename>
 	<license>GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html</license>
 	<version>3.0.1</version>
-	<author>miniOrange Security Software Pvt. Ltd.</author>
-	<authorEmail>info@xecurify.com</authorEmail>
-	<creationDate>Jan 2018</creationDate>
+	<author></author>
+	<authorEmail></authorEmail>
+	<creationDate></creationDate>
 	<description>OpenJoomlaOAuth Client Plugin Installed Successfully!</description>
 	<scriptfile>pkg_script.php</scriptfile>
 	<files>

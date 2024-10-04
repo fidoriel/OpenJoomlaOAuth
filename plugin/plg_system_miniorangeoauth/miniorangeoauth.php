@@ -13,7 +13,6 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.plugin.plugin');
 jimport('joomla.user.helper');
 jimport('joomla.access.access');
-require_once JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_miniorange_oauth'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'mo_customer_setup.php';
 
 class plgSystemMiniorangeoauth extends JPlugin
 {
@@ -75,7 +74,6 @@ class plgSystemMiniorangeoauth extends JPlugin
             $admin_email = (isset($customerResult['email']) && !empty($customerResult['email'])) ? $customerResult['email'] : $feedback_email;
             $admin_phone = $customerResult['admin_phone'];
             $data1 = $radio . ' : ' . $data;
-            require_once JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_miniorange_oauth' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'mo_customer_setup.php';
             require_once JPATH_SITE . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Installer' . DIRECTORY_SEPARATOR . 'Installer.php';
             
             foreach ($post['result'] as $fbkey) 
@@ -176,14 +174,17 @@ class plgSystemMiniorangeoauth extends JPlugin
                 $appname = $session->get('appname');
                 $name_attr = "";
                 $email_attr = "";
+                $user_name_attr="";
                 $appdata = $this->miniOauthFetchDb('#__miniorange_oauth_config', array('custom_app'=>$appname));
                 if(is_null($appdata))
                     $appdata = $this->miniOauthFetchDb('#__miniorange_oauth_config', array('appname'=>$appname));
                 $currentapp = $appdata;
                 if (isset($appdata['email_attr']))
                     $email_attr = $appdata['email_attr'];
-                if (isset($appdata['first_name_attr']))
-                    $name_attr = $appdata['first_name_attr'];
+                if (isset($appdata['full_name_attr']))
+                    $name_attr = $appdata['full_name_attr'];
+                if (isset($appdata['user_name_attr']))
+                    $user_name_attr = $appdata['user_name_attr'];
                 if (!$currentapp)
                     exit('Application not configured.');
                 $authBase = JPATH_BASE . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_miniorange_oauth';
@@ -207,7 +208,7 @@ class plgSystemMiniorangeoauth extends JPlugin
                 }
                 $resourceOwner = $mo_oauth_handler->getResourceOwner($resourceownerdetailsurl, $accessToken,$idToken);
                 $mo_oauth_handler->printError();
-                list($email,$name)=$this->getEmailAndName($resourceOwner,$email_attr,$name_attr);
+                list($email,$name,$username)=$this->getEmailAndName($resourceOwner,$email_attr,$name_attr, $user_name_attr);
                 $checkUser = $this->get_user_from_joomla($email);
 
                 if ($checkUser) {
@@ -215,13 +216,11 @@ class plgSystemMiniorangeoauth extends JPlugin
                 } 
                 else 
                 {
-					require_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_miniorange_oauth' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'mo_customer_setup.php';
-
                     $user = new JUser;
                     $data = array();
                     
                     $data['name'] = $name;
-                    $data['username'] = $email;
+                    $data['username'] = $username;
                     $data['email'] = $email;
 
                     $data['groups'] = $this->getRegisteredGroups();
@@ -283,7 +282,7 @@ class plgSystemMiniorangeoauth extends JPlugin
         $query = $db->getQuery(true);
         $query->select('extension_id');
         $query->from('#__extensions');
-        $query->where($db->quoteName('name') . " = " . $db->quote('OPEN_OPENID_OAUTH'));
+        $query->where($db->quoteName('name') . " = " . $db->quote('COM_MINIORANGE_OAUTH'));
         $db->setQuery($query);
         $result = $db->loadColumn();
         $tables = JFactory::getDbo()->getTableList();
@@ -294,7 +293,7 @@ class plgSystemMiniorangeoauth extends JPlugin
         }
     }
 
-    function getEmailAndName($resourceOwner,$email_attr,$name_attr)
+    function getEmailAndName($resourceOwner,$email_attr,$name_attr,$user_name_attr)
     {
         //TEST Configuration
         $session = JFactory::getSession();
@@ -350,6 +349,9 @@ class plgSystemMiniorangeoauth extends JPlugin
         if (!empty($name_attr))
             $name = $this->getnestedattribute($resourceOwner, $name_attr);
 
+        if (!empty($user_name_attr))
+            $username = $this->getnestedattribute($resourceOwner, $user_name_attr);
+
         if (empty($email)) 
         {
             $home_link = JURI::root();
@@ -361,7 +363,7 @@ class plgSystemMiniorangeoauth extends JPlugin
             echo '<p align="center"><a href=' . $home_link . ' type="button" style="color: white; background: #185b91; padding: 10px 20px;">Back to Website</a><p>';
             exit;
         }
-        return array($email,$name);
+        return array($email,$name,$username);
     }
 
     function testattrmappingconfig($nestedprefix, $resourceOwnerDetails)

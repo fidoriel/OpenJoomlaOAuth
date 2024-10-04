@@ -118,11 +118,6 @@ class pkg_oauthclientInstallerScript
     <li>Click on <b>OpenJoomlaOAuth Client</b> and select <b>Configure OAuth</b> tab</li>
     <li>You can start configuring.</li>
     </ul>
-    	<div class="mo-row">
-            <a class="btn btn-secondary" style="background-color: #46a546; color : white"  href="index.php?option=com_miniorange_oauth&view=accountsetup&tab-panel=configuration">Start Using OpenJoomlaOAuth Client plugin</a>
-            <a class="btn btn-secondary" style="background-color: #46a546; color : white" href="https://plugins.miniorange.com/guide-to-enable-joomla-oauth-client" target="_blank">Read the miniOrange documents</a>
-		    <a class="btn btn-secondary" style="background-color: #46a546; color : white" href="https://www.miniorange.com/contact" target="_blank">Get Support!</a>
-        </div>
         <?php
     }
   

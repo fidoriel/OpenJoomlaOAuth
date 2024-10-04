@@ -155,13 +155,15 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
         $post=	JFactory::getApplication()->input->post->getArray();
 
         $email_attr = isset($post['mo_oauth_email_attr'])? $post['mo_oauth_email_attr'] : '';
-        $first_name_attr = isset($post['mo_oauth_first_name_attr'])? $post['mo_oauth_first_name_attr'] : '';
+        $full_name_attr = isset($post['mo_oauth_full_name_attr'])? $post['mo_oauth_full_name_attr'] : '';
+        $user_name_attr = isset($post['mo_oauth_user_name_attr'])? $post['mo_oauth_user_name_attr'] : '';
 
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $fields = array(
             $db->quoteName('email_attr') . ' = '.$db->quote($email_attr),
-            $db->quoteName('first_name_attr') . ' = '.$db->quote($first_name_attr),
+            $db->quoteName('full_name_attr') . ' = '.$db->quote($full_name_attr),
+            $db->quoteName('user_name_attr') . ' = '.$db->quote($user_name_attr),
         );
 
         $conditions = array(
@@ -172,7 +174,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
         $db->setQuery($query);
         $result = $db->execute();
 
-        $this->setRedirect('index.php?option=com_miniorange_oauth&view=accountsetup&tab-panel=configuration&progress=step4',JText::_('OPEN_OPENID_OAUTH_ATTRIBUTE_MAPPING_SAVED_SUCCESSFULLY') );
+        $this->setRedirect('index.php?option=com_miniorange_oauth&view=accountsetup&tab-panel=configuration&progress=step4',JText::_('COM_MINIORANGE_OAUTH_ATTRIBUTE_MAPPING_SAVED_SUCCESSFULLY') );
     }
 
     function clearConfig(){
@@ -187,7 +189,8 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
         $accesstokenurl = "";
         $resourceownerdetailsurl = "";
         $email_attr="";
-        $first_name_attr="";
+        $full_name_attr="";
+        $user_name_attr="";
         $test_attribute_name = "";
 
         $db = JFactory::getDbo(); 
@@ -203,7 +206,8 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
             $db->quoteName('user_info_endpoint') . ' = '.$db->quote($resourceownerdetailsurl),
             $db->quoteName('redirecturi') . ' = '.$db->quote(''),
             $db->quoteName('email_attr') . ' = '.$db->quote($email_attr),
-            $db->quoteName('first_name_attr') . ' = '.$db->quote($first_name_attr),
+            $db->quoteName('full_name_attr') . ' = '.$db->quote($full_name_attr),
+            $db->quoteName('user_name_attr') . ' = '.$db->quote($user_name_attr),
             $db->quoteName('test_attribute_name') . ' = '.$db->quote($test_attribute_name),
         );
 
@@ -215,7 +219,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
         $db->setQuery($query);
         $result = $db->execute();
 
-        $this->setRedirect('index.php?option=com_miniorange_oauth&view=accountsetup&tab-panel=configuration', JText::_('OPEN_OPENID_OAUTH_APP_CONFIGURATION_RESET'));
+        $this->setRedirect('index.php?option=com_miniorange_oauth&view=accountsetup&tab-panel=configuration', JText::_('COM_MINIORANGE_OAUTH_APP_CONFIGURATION_RESET'));
     }
 
 
@@ -241,7 +245,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
 
         if($clientid =='' && $clientsecret =='')
         {
-			$this->setRedirect('index.php?option=com_miniorange_oauth&view=accountsetup', JText::_('OPEN_OPENID_OAUTH_ENTER_CLIENT_ID_BEFORE_DOWNLOADING'), 'error');
+			$this->setRedirect('index.php?option=com_miniorange_oauth&view=accountsetup', JText::_('COM_MINIORANGE_OAUTH_ENTER_CLIENT_ID_BEFORE_DOWNLOADING'), 'error');
 			return;
         }
 
@@ -255,7 +259,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
 		header('Content-Type: application/json'); 
 		print_r($filecontentd);
 
-        $this->setRedirect('index.php?option=com_miniorange_oauth&view=accountsetup',JText::_('OPEN_OPENID_OAUTH_PLUGIN_CONFIGURATION_DOWNLOADED_SUCCESSFULLY') );
+        $this->setRedirect('index.php?option=com_miniorange_oauth&view=accountsetup',JText::_('COM_MINIORANGE_OAUTH_PLUGIN_CONFIGURATION_DOWNLOADED_SUCCESSFULLY') );
         exit;
     }
 
@@ -275,7 +279,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
         $updateFieldsArray = array('proxy_server_url' => '', 'proxy_server_port' => '80', 'proxy_username' => '', 'proxy_password' => '', 'proxy_set' => '');
 		
         $this->updateDatabaseQuery($nameOfDatabase, $updateFieldsArray);
-        $this->setRedirect('index.php?option=com_miniorange_oauth&view=accountsetup&tab-panel=account', JText::_('OPEN_OPENID_OAUTH_PROXY_SETTING_RESET'));
+        $this->setRedirect('index.php?option=com_miniorange_oauth&view=accountsetup&tab-panel=account', JText::_('COM_MINIORANGE_OAUTH_PROXY_SETTING_RESET'));
     }
 
     function moOAuthProxyServer(){
@@ -296,6 +300,6 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
 		);
 
         $this->updateDatabaseQuery($nameOfDatabase, $updateFieldsArray);
-		$this->setRedirect('index.php?option=com_miniorange_oauth&view=accountsetup&tab-panel=account', JText::_('OPEN_OPENID_OAUTH_PROXY_SERVER_SAVED_SUCCESSFULLY'));
+		$this->setRedirect('index.php?option=com_miniorange_oauth&view=accountsetup&tab-panel=account', JText::_('COM_MINIORANGE_OAUTH_PROXY_SERVER_SAVED_SUCCESSFULLY'));
 	}
 }
