@@ -535,7 +535,7 @@ function getAppDetails(){
     $db = JFactory::getDbo();
     $query = $db->getQuery(true);
     $query->select('*');
-    $query->from($db->quoteName('#__miniorange_oauth_config'));
+    $query->from($db->quoteName('#__openjoomlaoauth_config'));
     $query->where($db->quoteName('id') . " = 1");
     $db->setQuery($query);
     return $db->loadAssoc();

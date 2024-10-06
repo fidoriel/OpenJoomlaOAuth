@@ -32,7 +32,6 @@
 		<submenu>
 			<menu link="option=com_miniorange_oauth&amp;view=accountsetup&amp;tab-panel=configuration">Configure OAuth</menu>
 			<menu link="option=com_miniorange_oauth&amp;view=accountsetup&amp;tab-panel=attrrolemapping">User Mapping</menu>
-			<menu link="option=com_miniorange_oauth&amp;view=accountsetup&amp;tab-panel=rolemapping">Advance Setting </menu>
 		</submenu>
 		
 		<files folder="admin">

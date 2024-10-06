@@ -19,8 +19,8 @@ class plgSystemMiniorangeoauth extends JPlugin
     private $attributesNames = "";
     public function onAfterRender()
     {
-        $app            = JFactory::getApplication();
-        $body           = $app->getBody();
+        $app = JFactory::getApplication();
+        $body = $app->getBody();
         $tab = 0;
         $tables = JFactory::getDbo()->getTableList();
         foreach ($tables as $table)
@@ -31,9 +31,9 @@ class plgSystemMiniorangeoauth extends JPlugin
         if($tab===0)
             return;
         
-        $customerResult =$this->miniOauthFetchDb('#__miniorange_oauth_config',array('id'=>'1'));
-        $applicationName=$customerResult['appname'];
-        $linkCheck      =$customerResult['login_link_check'];
+        $customerResult = $this->fetchDb('#__openjoomlaoauth_config',array('id'=>'1'));
+        $applicationName = $customerResult['appname'];
+        $linkCheck = $customerResult['login_link_check'];
         if($linkCheck==1 && $app->isClient('site'))
         {
             $linkCondition = <<<EOD
@@ -60,25 +60,12 @@ class plgSystemMiniorangeoauth extends JPlugin
         {
             $radio = $post['deactivate_plugin'];
             $data = $post['query_feedback'];
-            $current_user = JFactory::getUser();
-            $feedback_email = isset($post['feedback_email']) ? $post['feedback_email'] : $current_user->email;
-            $fields = array(
-                'uninstall_feedback'=>1
-            );
-            $conditions = array(
-                'id'=>'1'
-            );
 
-            $this->miniOauthUpdateDb('#__miniorange_oauth_customer',$fields,$conditions);
-            $customerResult=$this->miniOauthFetchDb('#__miniorange_oauth_customer',array('id'=>'1'));
-            $admin_email = (isset($customerResult['email']) && !empty($customerResult['email'])) ? $customerResult['email'] : $feedback_email;
-            $admin_phone = $customerResult['admin_phone'];
-            $data1 = $radio . ' : ' . $data;
             require_once JPATH_SITE . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Installer' . DIRECTORY_SEPARATOR . 'Installer.php';
             
             foreach ($post['result'] as $fbkey) 
             {
-                $result = $this->miniOauthFetchDb('#__extensions',array('extension_id'=>$fbkey),'loadColumn','type');
+                $result = $this->fetchDb('#__extensions',array('extension_id'=>$fbkey),'loadColumn','type');
                 $type = 0;
                 foreach ($result as $results) 
                 {
@@ -127,10 +114,10 @@ class plgSystemMiniorangeoauth extends JPlugin
             
             // get Ouath configuration from database
             
-            $appdata = $this->miniOauthFetchDb('#__miniorange_oauth_config', array('custom_app'=>$appname));
+            $appdata = $this->fetchDb('#__openjoomlaoauth_config', array('custom_app'=>$appname));
             $session->set('appname', $appname);
             if(is_null($appdata))
-                $appdata = $this->miniOauthFetchDb('#__miniorange_oauth_config', array('appname'=>$appname));
+                $appdata = $this->fetchDb('#__openjoomlaoauth_config', array('appname'=>$appname));
             
             if(empty($appdata['client_id']) || empty($appdata['app_scope'])){
                 echo "<center><h3 style='color:indianred;border:1px dotted black;'>Sorry! client ID or Scope is empty.</h3></center>";
@@ -175,9 +162,9 @@ class plgSystemMiniorangeoauth extends JPlugin
                 $name_attr = "";
                 $email_attr = "";
                 $user_name_attr="";
-                $appdata = $this->miniOauthFetchDb('#__miniorange_oauth_config', array('custom_app'=>$appname));
+                $appdata = $this->fetchDb('#__openjoomlaoauth_config', array('custom_app'=>$appname));
                 if(is_null($appdata))
-                    $appdata = $this->miniOauthFetchDb('#__miniorange_oauth_config', array('appname'=>$appname));
+                    $appdata = $this->fetchDb('#__openjoomlaoauth_config', array('appname'=>$appname));
                 $currentapp = $appdata;
                 if (isset($appdata['email_attr']))
                     $email_attr = $appdata['email_attr'];
@@ -284,13 +271,6 @@ class plgSystemMiniorangeoauth extends JPlugin
         $query->from('#__extensions');
         $query->where($db->quoteName('name') . " = " . $db->quote('COM_MINIORANGE_OAUTH'));
         $db->setQuery($query);
-        $result = $db->loadColumn();
-        $tables = JFactory::getDbo()->getTableList();
-        $tab = 0;
-        foreach ($tables as $table) {
-            if (strpos($table, "miniorange_oauth_customer"))
-                $tab = $table;
-        }
     }
 
     function getEmailAndName($resourceOwner,$email_attr,$name_attr,$user_name_attr)
@@ -327,7 +307,7 @@ class plgSystemMiniorangeoauth extends JPlugin
             self::testattrmappingconfig("",$resourceOwner);             
             echo "</table> <br><br>";
             $user_attributes = $this->attributesNames;
-            $this->miniOauthUpdateDb('#__miniorange_oauth_config',array('test_attribute_name'=>$user_attributes),array("id"=>1));
+            $this->updateDb('#__openjoomlaoauth_config',array('test_attribute_name'=>$user_attributes),array("id"=>1));
             exit();
         }
         if(!empty($email_attr))
@@ -435,26 +415,7 @@ class plgSystemMiniorangeoauth extends JPlugin
         //$app->checkSession();
         $sessionId = $session->getId();
         $this->updateUsernameToSessionId($user->id, $user->username, $sessionId);
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query->select('*');
-        $query->from($db->quoteName('#__miniorange_oauth_customer'));
-        $query->where($db->quoteName('id') . " = 1");
-        $db->setQuery($query);
-        $result = $db->loadAssoc();
-        $test = base64_decode(empty($result['sso_test'])?base64_encode(0):$result['sso_test']);
-        $sso_test = base64_encode($sso_test);
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $fields = array(
-            $db->quoteName('sso_test') . ' = ' . $db->quote($sso_test),
-        );
-        $conditions = array(
-            $db->quoteName('id') . ' = 1'
-        );
-        $query->update($db->quoteName('#__miniorange_oauth_customer'))->set($fields)->where($conditions);
-        $db->setQuery($query);
-        $results = $db->execute();
+
         $user->setLastVisit();
         $db = JFactory::getDbo();
         
@@ -537,7 +498,7 @@ class plgSystemMiniorangeoauth extends JPlugin
         $result = $db->execute();
     }
 
-    function miniOauthFetchDb($tableName,$condition,$method='loadAssoc',$columns='*')
+    function fetchDb($tableName,$condition,$method='loadAssoc',$columns='*')
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
@@ -560,7 +521,7 @@ class plgSystemMiniorangeoauth extends JPlugin
             return $db->loadAssoc();
     }
 
-    function miniOauthUpdateDb($tableName,$fields,$conditions)
+    function updateDb($tableName,$fields,$conditions)
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);

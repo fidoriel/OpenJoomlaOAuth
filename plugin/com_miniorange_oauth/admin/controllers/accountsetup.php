@@ -25,7 +25,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
 
     function saveConfig() 
     { 
-        $post=	JFactory::getApplication()->input->post->getArray();
+        $post =	JFactory::getApplication()->input->post->getArray();
         $appD = new MoOauthCustomer();
         if(count($post)==0){
             $this->setRedirect('index.php?option=com_miniorange_oauth&view=accountsetup');
@@ -50,7 +50,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
                     $db->quoteName('id') . ' = 1'
                 );
 
-                $query->update($db->quoteName('#__miniorange_oauth_config'))->set($fields)->where($conditions);
+                $query->update($db->quoteName('#__openjoomlaoauth_config'))->set($fields)->where($conditions);
                 $db->setQuery($query);
                 $result = $db->execute();
                 $returnURL  = 'index.php?option=com_miniorange_oauth&view=accountsetup&moAuthAddApp='.$post['mo_oauth_app_name'].'&progress=step2';
@@ -86,27 +86,31 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
                 $appData                 = json_decode($appD->getAppData(),true);
                 $appData                 = explode(",",$appData[$appname]['1']);
                 $scope                   = isset($appEndpoints['scope'])? $appEndpoints['scope'] : 'email';
-    
+
+                $https_prefix = "https://";
+                $http_prefix = "http://";
+
+                    
     
                 foreach($appData as $key=>$val)
                 {
-                    if(strpos($post[$val], 'http') !==false){
-                        if(strpos($post[$val], 'https://') !== false){
-                            $current = trim($post[$val],"https:// /");
-                        }
-                        if(strpos($post[$val], 'http://') !== false){
-                            $current = trim($post[$val],"http:// /");
-                        }
+                    $raw_url = $post[$val];
+
+                    if(str_starts_with($raw_url, $https_prefix)){
+                        $current = substr($raw_url, strlen($https_prefix));
+                    }
+                    else if(str_starts_with($raw_url, $http_prefix)){
+                        $current = substr($raw_url, strlen($http_prefix));
                     }
                     else{
-                        $current = $post[$val];
+                        $current = $raw_url;
                     }
                     
                     $authorizeurl            = str_replace("{".strtolower($val)."}",$current,$authorizeurl);
                     $accesstokenurl          = str_replace("{".strtolower($val)."}",$current,$accesstokenurl);
                     $resourceownerdetailsurl = str_replace("{".strtolower($val)."}",$current,$resourceownerdetailsurl);
-    
                 }
+
             }
     
             $in_header               = isset($post['mo_oauth_in_header'])?$post['mo_oauth_in_header']:'';
@@ -141,7 +145,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
                 $db->quoteName('id') . ' = 1'
             );
     
-            $query->update($db->quoteName('#__miniorange_oauth_config'))->set($fields)->where($conditions);
+            $query->update($db->quoteName('#__openjoomlaoauth_config'))->set($fields)->where($conditions);
             $db->setQuery($query);
             $result = $db->execute();
             $returnURL  = 'index.php?option=com_miniorange_oauth&view=accountsetup&moAuthAddApp='.$post['mo_oauth_app_name'].'&progress=step3';
@@ -170,7 +174,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
             $db->quoteName('id') . ' = 1'
         );
 
-        $query->update($db->quoteName('#__miniorange_oauth_config'))->set($fields)->where($conditions);
+        $query->update($db->quoteName('#__openjoomlaoauth_config'))->set($fields)->where($conditions);
         $db->setQuery($query);
         $result = $db->execute();
 
@@ -215,7 +219,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
             $db->quoteName('id') . ' = 1'
         );
 
-        $query->update($db->quoteName('#__miniorange_oauth_config'))->set($fields)->where($conditions);
+        $query->update($db->quoteName('#__openjoomlaoauth_config'))->set($fields)->where($conditions);
         $db->setQuery($query);
         $result = $db->execute();
 
@@ -238,9 +242,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
     
     function exportConfiguration()
     {
-        $appDetails = $this->retrieveAttributes('#__miniorange_oauth_config');
-        $customer_details = $this->retrieveAttributes('#__miniorange_oauth_customer');
-        $customapp = $appDetails['custom_app'];
+        $appDetails = $this->retrieveAttributes('#__openjoomlaoauth_config');
         $clientid = $appDetails['client_id'];
 
         if($clientid =='' && $clientsecret =='')
@@ -250,7 +252,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
         }
 
         $plugin_configuration = array();
-        array_push($plugin_configuration, $appDetails, $customer_details);
+        array_push($plugin_configuration, $appDetails);
 		
 		
 		$filecontentd = json_encode($plugin_configuration, JSON_PRETTY_PRINT);
@@ -275,7 +277,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
 
     function moOAuthProxyConfigReset()
     {
-        $nameOfDatabase= '#__miniorange_oauth_config';
+        $nameOfDatabase= '#__openjoomlaoauth_config';
         $updateFieldsArray = array('proxy_server_url' => '', 'proxy_server_port' => '80', 'proxy_username' => '', 'proxy_password' => '', 'proxy_set' => '');
 		
         $this->updateDatabaseQuery($nameOfDatabase, $updateFieldsArray);
@@ -290,7 +292,7 @@ class miniorangeoauthControllerAccountSetup extends JControllerForm
 		$proxy_username = isset($post['proxy_username'])? $post['proxy_username'] : '';
 		$proxy_password = isset($post['proxy_password'])? $post['proxy_password'] : '';
 
-		$nameOfDatabase = '#__miniorange_oauth_config';
+		$nameOfDatabase = '#__openjoomlaoauth_config';
 		$updateFieldsArray = array(
 			'proxy_server_url' 	  	  => $proxy_server_url,
 			'proxy_server_port' 	  => $proxy_server_port,
