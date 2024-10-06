@@ -16,7 +16,7 @@ defined('_JEXEC') or die('Restricted access');
  * manifest file as follows:
  * <scriptfile>script.php</scriptfile>
  *
- 
+
  * @copyright   Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
@@ -29,17 +29,17 @@ class plgSystemMiniorangeoauthInstallerScript
      *
      * @return void
      */
-    public function install($parent) 
+    public function install($parent)
     {
 
-          $db  = JFactory::getDbo();
-          $query = $db->getQuery(true);
-          $query->update('#__extensions');
-          $query->set($db->quoteName('enabled') . ' = 1');
-          $query->where($db->quoteName('element') . ' = ' . $db->quote('miniorangeoauth'));
-          $query->where($db->quoteName('type') . ' = ' . $db->quote('plugin'));
-          $db->setQuery($query);
-          $db->execute();
+        $db  = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->update('#__extensions');
+        $query->set($db->quoteName('enabled') . ' = 1');
+        $query->where($db->quoteName('element') . ' = ' . $db->quote('miniorangeoauth'));
+        $query->where($db->quoteName('type') . ' = ' . $db->quote('plugin'));
+        $db->setQuery($query);
+        $db->execute();
     }
 
     /**
@@ -49,7 +49,7 @@ class plgSystemMiniorangeoauthInstallerScript
      *
      * @return void
      */
-    public function uninstall($parent) 
+    public function uninstall($parent)
     {
         //echo '<p>' . JText::_('COM_HELLOWORLD_UNINSTALL_TEXT') . '</p>';
     }
@@ -61,7 +61,7 @@ class plgSystemMiniorangeoauthInstallerScript
      *
      * @return void
      */
-    public function update($parent) 
+    public function update($parent)
     {
         //echo '<p>' . JText::sprintf('COM_HELLOWORLD_UPDATE_TEXT', $parent->get('manifest')->version) . '</p>';
     }
@@ -78,7 +78,7 @@ class plgSystemMiniorangeoauthInstallerScript
      *
      * @return void
      */
-    public function preflight($type, $parent) 
+    public function preflight($type, $parent)
     {
         //echo '<p>' . JText::_('COM_HELLOWORLD_PREFLIGHT_' . $type . '_TEXT') . '</p>';
     }
@@ -94,8 +94,8 @@ class plgSystemMiniorangeoauthInstallerScript
      *
      * @return void
      */
-    function postflight($type, $parent) 
+    public function postflight($type, $parent)
     {
-       // echo '<p>' . JText::_('COM_HELLOWORLD_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
+        // echo '<p>' . JText::_('COM_HELLOWORLD_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
     }
 }

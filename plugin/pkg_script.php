@@ -17,7 +17,7 @@ class pkg_oauthclientInstallerScript
      *
      * @return void
      */
-    public function install($parent) 
+    public function install($parent)
     {
 
             
@@ -30,7 +30,7 @@ class pkg_oauthclientInstallerScript
      *
      * @return void
      */
-    public function uninstall($parent) 
+    public function uninstall($parent)
     {
         //echo '<p>' . JText::_('COM_HELLOWORLD_UNINSTALL_TEXT') . '</p>';
     }
@@ -42,7 +42,7 @@ class pkg_oauthclientInstallerScript
      *
      * @return void
      */
-    public function update($parent) 
+    public function update($parent)
     {
         //echo '<p>' . JText::sprintf('COM_HELLOWORLD_UPDATE_TEXT', $parent->get('manifest')->version) . '</p>';
     }
@@ -59,7 +59,7 @@ class pkg_oauthclientInstallerScript
      *
      * @return void
      */
-    public function preflight($type, $parent) 
+    public function preflight($type, $parent)
     {
         //echo '<p>' . JText::_('COM_HELLOWORLD_PREFLIGHT_' . $type . '_TEXT') . '</p>';
     }
@@ -75,16 +75,17 @@ class pkg_oauthclientInstallerScript
      *
      * @return void
      */
-    function postflight($type, $parent) 
+    public function postflight($type, $parent)
     {
-       // echo '<p>' . JText::_('COM_HELLOWORLD_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
-       if ($type == 'uninstall') {
-        return true;
+        // echo '<p>' . JText::_('COM_HELLOWORLD_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
+        if ($type == 'uninstall') {
+            return true;
         }
-       $this->showInstallMessage('');
+        $this->showInstallMessage('');
     }
 
-    protected function showInstallMessage($messages=array()) {
+    protected function showInstallMessage($messages=array())
+    {
         ?>
         <style>
         
@@ -120,5 +121,5 @@ class pkg_oauthclientInstallerScript
     </ul>
         <?php
     }
-  
+
 }

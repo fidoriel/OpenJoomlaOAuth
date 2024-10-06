@@ -1,33 +1,31 @@
 <?php
-/** Copyright (C) 2015  miniOrange
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+// Copyright (C) 2015 miniOrange
+// Copyright (C) 2024 fidoriel
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>
-* @package 		miniOrange OAuth
-* @license		http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
-*/
-/**
-This library is miniOrange Authentication Service. 
-Contains Request Calls to Customer service.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-**/
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-defined( '_JEXEC' ) or die( 'Restricted access' );
+// @license		http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE
 
-class MoOauthCustomer{
+defined('_JEXEC') or die('Restricted access');
 
-	function getAppJson(){
-		return '{	
+class MoOauthCustomer
+{
+
+    public function getAppJson()
+    {
+        return '{	
 			"azure": {
 				"label":"Azure AD", "type":"oauth", "image":"azure.png", "scope": "openid email profile", "authorize": "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize", "token": "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token", "userinfo":"https://graph.microsoft.com/beta/me", "guide":"https://plugins.miniorange.com/configure-azure-ad-with-joomla", "logo_class":"fa fa-windowslive"
 			},
@@ -269,11 +267,11 @@ class MoOauthCustomer{
 				"label":"Custom OpenID Connect App", "type":"openidconnect", "image":"customapp.png", "scope": "", "authorize": "", "token": "", "userinfo": "", "guide":"", "logo_class":"fa fa-lock"
 			}
 		}';
-	}
+    }
 
-	function getAppData()
-	{
-		return '{
+    public function getAppData()
+    {
+        return '{
 			"azure": {
 				"0":"both","1":"Tenant"
 			},
@@ -367,5 +365,5 @@ class MoOauthCustomer{
 	
 			
 		}';
-	}
-}?>
+    }
+}

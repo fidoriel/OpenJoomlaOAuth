@@ -1,19 +1,31 @@
 <?php
-/**
- * @package     Joomla.Administrator
- * @subpackage  com_miniorange_oauth
- *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
- */
-// No direct access to this file
+
+// Copyright (C) 2005 - 2015 Open Source Matters
+// Copyright (C) 2015 miniOrange
+// Copyright (C) 2024 fidoriel
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+// @license		http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE
+
 defined('_JEXEC') or die('Restricted Access');
 JHtml::_('jquery.framework');
-JHtml::_('script',JURI::base() . 'components/com_miniorange_oauth/assets/js/bootstrap.js'); 
-JHtml::_('stylesheet',JURI::base() . 'components/com_miniorange_oauth/assets/css/miniorange_oauth.css');
-JHtml::_('stylesheet',JURI::base() . 'components/com_miniorange_oauth/assets/css/miniorange_boot.css');
-JHtml::_('script',JURI::base() . 'components/com_miniorange_oauth/assets/js/myscript.js'); 
-JHtml::_('stylesheet','https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+JHtml::_('script', JURI::base() . 'components/com_miniorange_oauth/assets/js/bootstrap.js');
+JHtml::_('stylesheet', JURI::base() . 'components/com_miniorange_oauth/assets/css/miniorange_oauth.css');
+JHtml::_('stylesheet', JURI::base() . 'components/com_miniorange_oauth/assets/css/miniorange_boot.css');
+JHtml::_('script', JURI::base() . 'components/com_miniorange_oauth/assets/js/myscript.js');
+JHtml::_('stylesheet', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 ?>  
 <?php
 if (MoOAuthUtility::is_curl_installed() == 0) { ?>
@@ -26,7 +38,7 @@ $oauth_active_tab = isset($active_tab['tab-panel']) && !empty($active_tab['tab-p
 global $license_tab_link;
 $license_tab_link="index.php?option=com_miniorange_oauth&view=accountsetup&tab-panel=license";
 $current_user = JFactory::getUser();
-if(!JPluginHelper::isEnabled('system', 'miniorangeoauth')) {
+if (!JPluginHelper::isEnabled('system', 'miniorangeoauth')) {
     ?>
     <div id="system-message-container">
         <button type="button" class="close" data-dismiss="alert">×</button>
@@ -87,9 +99,9 @@ if(!JPluginHelper::isEnabled('system', 'miniorangeoauth')) {
         <div id="configuration" class="tab-pane <?php echo $oauth_active_tab == 'configuration' ? 'active' : ''; ?>">
             <div class="mo_boot_row">
                 <div class="mo_boot_col-sm-12">
-                    <?php 
+                    <?php
                         moOAuthConfiguration();
-                    ?>
+?>
                 </div>
             </div>
         </div>
@@ -101,7 +113,8 @@ if(!JPluginHelper::isEnabled('system', 'miniorangeoauth')) {
             </div>
         </div>
 <?php
-function getAppJson(){
+function getAppJson()
+{
     return '{	
         "azure": {
             "label":"Azure AD", "type":"oauth", "image":"azure.png", "scope": "openid email profile", "authorize": "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize", "token": "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token", "userinfo":"https://graph.microsoft.com/beta/me", "guide":"https://plugins.miniorange.com/azure-ad-sso-single-sign-on-joomla-using-oauth-client-openid-connect", "logo_class":"fa fa-windowslive"
@@ -442,19 +455,18 @@ function getAppData()
 }
 function selectAppByIcon()
 {
-    $appArray = json_decode(getAppJson(),TRUE); 
+    $appArray = json_decode(getAppJson(), true);
     $ImagePath=JURI::base().'components/com_miniorange_oauth/assets/images/';
     $imageTableHtml = "<table id='moAuthAppsTable'>";
     $i=1;
-    $PreConfiguredApps = array_slice($appArray,0,count($appArray)-2);
-    foreach ($PreConfiguredApps as $key => $value) 
-    {
+    $PreConfiguredApps = array_slice($appArray, 0, count($appArray)-2);
+    foreach ($PreConfiguredApps as $key => $value) {
         $img=$ImagePath.$value['image'];
-        if($i%6==1){
+        if ($i%6==1) {
             $imageTableHtml.='<tr>';
         }
         $imageTableHtml=$imageTableHtml."<td class='mo_boot_border' moAuthAppSelector='".$value['label']."'><a class='mo_boot_select_app' href='".JRoute::_('index.php?option=com_miniorange_oauth&view=accountsetup&moAuthAddApp='.$key)."''><div><img style='max-height:60px;max-width:60px;' src='".$img."'><br><p>".$value['label']."</p></div></a></td>";
-        if($i%6==0 || $i==count($appArray)){
+        if ($i%6==0 || $i==count($appArray)) {
             $imageTableHtml.='</tr>';
         }
         $i++;
@@ -475,7 +487,7 @@ function selectAppByIcon()
         <div class="mo_boot_col-sm-12 mo_boot_mt-4">
             <?php
                 echo $imageTableHtml;
-            ?>
+    ?>
         </div>
         <div class="mo_boot_col-sm-12 mo_boot_mt-4">
             <div class="mo_boot_row">
@@ -505,7 +517,7 @@ function selectAppByIcon()
 }
 function selectCustomApp()
 {
-    $appArray = json_decode(getAppJson(),TRUE);
+    $appArray = json_decode(getAppJson(), true);
     $ImagePath=JURI::base().'components/com_miniorange_oauth/assets/images/';
     ?> 
     <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3">
@@ -531,7 +543,8 @@ function selectCustomApp()
     </div>
     <?php
 }
-function getAppDetails(){
+function getAppDetails()
+{
     $db = JFactory::getDbo();
     $query = $db->getQuery(true);
     $query->select('*');
@@ -540,18 +553,15 @@ function getAppDetails(){
     $db->setQuery($query);
     return $db->loadAssoc();
 }
-function configuration($OauthApp,$appLabel)
+function configuration($OauthApp, $appLabel)
 {
     global $license_tab_link;
     $attribute = getAppDetails();
-    $appJson = json_decode(getAppJson(),true);
-    $appData = json_decode(getAppData(),true);
-    if($appJson[$appLabel]["guide"]!="")
-    {
+    $appJson = json_decode(getAppJson(), true);
+    $appData = json_decode(getAppData(), true);
+    if ($appJson[$appLabel]["guide"]!="") {
         $guide=$appJson[$appLabel]["guide"];
-    }
-    else
-    {
+    } else {
         $guide="https://plugins.miniorange.com/guide-to-enable-joomla-oauth-client";
     }
     $mo_oauth_app = $appLabel;
@@ -562,61 +572,52 @@ function configuration($OauthApp,$appLabel)
     $email_attr = "";
     $full_name_attr = "";
     $user_name_attr = "";
-    $isAppConfigured = FALSE;
+    $isAppConfigured = false;
     $mo_oauth_in_header = "checked=true";
     $mo_oauth_in_body   = "";
     $login_link_check="1";
-    if(isset($attribute['in_header_or_body']))
-    {
-        if( $attribute['in_header_or_body']=='inBody' ){
+    if (isset($attribute['in_header_or_body'])) {
+        if ($attribute['in_header_or_body']=='inBody') {
             $mo_oauth_in_header = "";
             $mo_oauth_in_body   = "checked=true";
-        }
-        else if($attribute['in_header_or_body']=='inHeader' ){
+        } elseif ($attribute['in_header_or_body']=='inHeader') {
             $mo_oauth_in_header = "checked=true";
             $mo_oauth_in_body   = "";
-        }
-        else if( $attribute['in_header_or_body']=='both' ){
+        } elseif ($attribute['in_header_or_body']=='both') {
             $mo_oauth_in_header = "checked=true";
             $mo_oauth_in_body   = "checked=true";
         }
-    }
-    else
-    {
-        if( isset($appData[$appLabel]) && $appData[$appLabel][0]=='both' ){
+    } else {
+        if (isset($appData[$appLabel]) && $appData[$appLabel][0]=='both') {
             $mo_oauth_in_header = "checked=true";
             $mo_oauth_in_body   = "checked=true";
-        }
-        else if(isset($appData['appLabel']) && $appData['appLabel'][0]=='inBody' ){
+        } elseif (isset($appData['appLabel']) && $appData['appLabel'][0]=='inBody') {
             $mo_oauth_in_header = "";
             $mo_oauth_in_body   = "checked=true";
-        }
-        else if(isset($appData['appLabel']) && $appData['appLabel'][0]=='inHeader' )
-        {
+        } elseif (isset($appData['appLabel']) && $appData['appLabel'][0]=='inHeader') {
             $mo_oauth_in_header = "checked=true";
             $mo_oauth_in_body   = "";
         }
     }
-    if (isset($attribute['client_id'])) 
-    {
+    if (isset($attribute['client_id'])) {
         $mo_oauth_app = empty($attribute['appname'])?$appLabel:$attribute['appname'];
         $custom_app = $attribute['custom_app'];
         $client_id = $attribute['client_id'];
         $client_secret = $attribute['client_secret'];
-        $isAppConfigured = empty($client_id) || empty($client_secret) || empty($custom_app)||empty($attribute['redirecturi'])?FALSE:TRUE;
-        $step1Check = empty($attribute['redirecturi'])?FALSE:TRUE;
-        $step2Check = empty($client_id) || empty($client_secret) || empty($custom_app)||empty($attribute['redirecturi'])?FALSE:TRUE;
+        $isAppConfigured = empty($client_id) || empty($client_secret) || empty($custom_app)||empty($attribute['redirecturi'])?false:true;
+        $step1Check = empty($attribute['redirecturi'])?false:true;
+        $step2Check = empty($client_id) || empty($client_secret) || empty($custom_app)||empty($attribute['redirecturi'])?false:true;
         $app_scope = empty($attribute['app_scope'])?$OauthApp['scope']:$attribute['app_scope'];
-        $authorize_endpoint = empty($attribute['authorize_endpoint'])?NULL:$attribute['authorize_endpoint'];
-        $access_token_endpoint = empty($attribute['access_token_endpoint'])?NULL:$attribute['access_token_endpoint'];
-        $user_info_endpoint = empty($attribute['user_info_endpoint'])?NULL:$attribute['user_info_endpoint'];
+        $authorize_endpoint = empty($attribute['authorize_endpoint'])?null:$attribute['authorize_endpoint'];
+        $access_token_endpoint = empty($attribute['access_token_endpoint'])?null:$attribute['access_token_endpoint'];
+        $user_info_endpoint = empty($attribute['user_info_endpoint'])?null:$attribute['user_info_endpoint'];
         $email_attr = $attribute['email_attr'];
         $full_name_attr = $attribute['full_name_attr'];
         $user_name_attr = $attribute['user_name_attr'];
         $attributesNames = $attribute['test_attribute_name'];
-        $step3Check = empty($email_attr)?FALSE:TRUE;
-        $redirecturi = explode('//',JURI::root())[1];
-        $attributesNames = explode(",",$attributesNames);
+        $step3Check = empty($email_attr)?false:true;
+        $redirecturi = explode('//', JURI::root())[1];
+        $attributesNames = explode(",", $attributesNames);
 
     }
     $get =JFactory::getApplication()->input->get->getArray();
@@ -635,21 +636,33 @@ function configuration($OauthApp,$appLabel)
             <div class="mo_boot_row m-0 p-0">
                 <div class="mo_boot_col-sm-12 m-0 p-0">
                     
-                    <div <?php if(1){echo "onclick = \"changeSubMenu(this,'#mo_client_setting')\" ";}else{echo "style='cursor:not-allowed;'";}?> title="Configure the Step 1 First" <?php echo(($progress=='step2')?'class="mo_sub_menu mo_sub_menu_active"':'class="mo_sub_menu"'); ?>>
+                    <div <?php if (1) {
+                        echo "onclick = \"changeSubMenu(this,'#mo_client_setting')\" ";
+                    } else {
+                        echo "style='cursor:not-allowed;'";
+                    }?> title="Configure the Step 1 First" <?php echo(($progress=='step2')?'class="mo_sub_menu mo_sub_menu_active"':'class="mo_sub_menu"'); ?>>
                         <span>Step 2 <small> [Client ID & Secret]</small></span></span> <span class="mo_boot_float-right"><i class=" mo_boot_text-success fa-solid fa-circle-check" <?php echo($step2Check?'style="display:block"':'style="display:none"'); ?>></i></span>
                     </div>
                 </div>
             </div>
             <div class="mo_boot_row m-0 p-0">
                 <div class="mo_boot_col-sm-12 m-0 p-0">
-                    <div <?php if($client_secret!=""){echo "onclick = \"changeSubMenu(this,'#mo_attribute_setting')\" ";}else{echo "style='cursor:not-allowed'";}?> title="Configure the Step 2 First" <?php echo(($progress=='step3')?'class="mo_sub_menu mo_sub_menu_active"':'class="mo_sub_menu"'); ?>>
+                    <div <?php if ($client_secret!="") {
+                        echo "onclick = \"changeSubMenu(this,'#mo_attribute_setting')\" ";
+                    } else {
+                        echo "style='cursor:not-allowed'";
+                    }?> title="Configure the Step 2 First" <?php echo(($progress=='step3')?'class="mo_sub_menu mo_sub_menu_active"':'class="mo_sub_menu"'); ?>>
                         <span>Step 3 <small>[Attribute Mapping]</small></span></span> <span class="mo_boot_float-right"><i class=" mo_boot_text-success fa-solid fa-circle-check" <?php echo($step3Check?'style="display:block"':'style="display:none"'); ?>></i></span>
                     </div>
                 </div>
             </div>
             <div class="mo_boot_row m-0 p-0">
                 <div  class="mo_boot_col-sm-12 m-0 p-0">
-                    <div <?php if($email_attr!=""){echo "onclick = \"changeSubMenu(this,'#mo_sso_url')\" ";}else{echo "style='cursor:not-allowed'";}?> title="Configure the Step 3 first" <?php echo (($progress=='step4')?'class="mo_sub_menu mo_sub_menu_active"':'class="mo_sub_menu"'); ?>>
+                    <div <?php if ($email_attr!="") {
+                        echo "onclick = \"changeSubMenu(this,'#mo_sso_url')\" ";
+                    } else {
+                        echo "style='cursor:not-allowed'";
+                    }?> title="Configure the Step 3 first" <?php echo(($progress=='step4')?'class="mo_sub_menu mo_sub_menu_active"':'class="mo_sub_menu"'); ?>>
                         <span>Step 4 <small>[SSO URL]</small></span></span>
                     </div>
                 </div>
@@ -667,13 +680,13 @@ function configuration($OauthApp,$appLabel)
                     <div class="mo_boot_text-center">
                         <?php  echo "<a href='index.php?option=com_miniorange_oauth&view=accountsetup&task=accountsetup.clearConfig'
                                     class='mo_boot_btn mo_boot_pb-1 mo_boot_btn-danger' style='padding:2px 5px'>".JText::_('COM_MINIORANGE_OAUTH_DELETE_APPLICATION')."</a>";
-                                ?> 
+    ?> 
                     </div>
                 </div>
             </div>
         </div>
         <div class="mo_boot_col-sm-10">
-            <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3" <?php echo (($progress=='step1')?'style="display:block"':'style="display:none"'); ?> id="mo_redirectUrl_setting">
+            <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3" <?php echo(($progress=='step1')?'style="display:block"':'style="display:none"'); ?> id="mo_redirectUrl_setting">
                 <div class="mo_boot_col-sm-12" id="mo_oauth_attributemapping">
                     <div class="mo_boot_row">
                         <div class="mo_boot_col-sm-12">
@@ -737,7 +750,7 @@ function configuration($OauthApp,$appLabel)
                     }
                 </script>
             </div>
-            <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3" <?php echo (($progress=='step2')?'style="display:block"':'style="display:none"'); ?> id="mo_client_setting">
+            <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3" <?php echo(($progress=='step2')?'style="display:block"':'style="display:none"'); ?> id="mo_client_setting">
                 <div class="mo_boot_col-sm-12 mo_boot_mt-5">
                     <form id="oauth_config_form_step2" name="" method="post" action="<?php echo JRoute::_('index.php?option=com_miniorange_oauth&view=accountsetup&task=accountsetup.saveConfig'); ?>">  
                         <input type="hidden" name="oauth_config_form_step2" value="true">                   
@@ -766,36 +779,26 @@ function configuration($OauthApp,$appLabel)
                                         <input placeholder="<?php echo JText::_('COM_MINIORANGE_OAUTH_CLIENT_SECRET_PLACEHOLDER');?>" class="mo_boot_form-control" type="text" id="mo_oauth_client_secret" name="mo_oauth_client_secret" value='<?php echo $client_secret; ?>'>
                                     </div>
                                 </div>
-                                <?php 
-                                    if($authorize_endpoint==NULL)
-                                    {   
-                                        if(isset($appData[$appLabel]))
-                                        {                    
-                                            $fields = explode(",",$appData[$appLabel]['1']);
-                                            foreach($fields as $key => $value)
-                                            {
-                                                if($value == 'Tenant')
-                                                {
-                                                    $placeholder = JText::_('COM_MINIORANGE_OAUTH_ENTER_THE_TENANT_ID');
-                                                }
-                                                else if( $value=='Domain')
-                                                {
-                                                    $placeholder = JText::_('COM_MINIORANGE_OAUTH_ENTER_THE_DOMAIN');
-                                                }
-                                                else
-                                                {
-                                                    $placeholder = JText::_('COM_MINIORANGE_OAUTH_ENTER_THE_DETAILS').$value ;
-                                                }
-                                                echo '<div class="mo_boot_row mo_boot_mt-3"><div class="mo_boot_col-sm-3">
+                                <?php
+        if ($authorize_endpoint==null) {
+            if (isset($appData[$appLabel])) {
+                $fields = explode(",", $appData[$appLabel]['1']);
+                foreach ($fields as $key => $value) {
+                    if ($value == 'Tenant') {
+                        $placeholder = JText::_('COM_MINIORANGE_OAUTH_ENTER_THE_TENANT_ID');
+                    } elseif ($value=='Domain') {
+                        $placeholder = JText::_('COM_MINIORANGE_OAUTH_ENTER_THE_DOMAIN');
+                    } else {
+                        $placeholder = JText::_('COM_MINIORANGE_OAUTH_ENTER_THE_DETAILS').$value ;
+                    }
+                    echo '<div class="mo_boot_row mo_boot_mt-3"><div class="mo_boot_col-sm-3">
                                                 <strong><span class="mo_oauth_highlight">*</span>'.$value.'</strong>
                                                 </div>
                                                 <div class="mo_boot_col-sm-7">
                                                     <input class="mo_boot_form-control" placeholder="'.$placeholder.'" type="text" id="" name="'.$value.'" value="" required>
                                                 </div></div>';
-                                            }
-                                        }
-                                        else
-                                        { ?>
+                }
+            } else { ?>
                                             <div class="mo_boot_row mo_boot_mt-3">
                                                 <div class="mo_boot_col-sm-3">
                                                     <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_APP_SCOPE');?></strong>
@@ -830,8 +833,8 @@ function configuration($OauthApp,$appLabel)
                                                     </em>
                                                 </div>
                                             </div>                           
-                                            <?php 
-                                                if(!isset($OauthApp['type']) || $OauthApp['type']=='oauth'){?>
+                                            <?php
+                    if (!isset($OauthApp['type']) || $OauthApp['type']=='oauth') {?>
                                                     <div class="mo_boot_row mo_boot_mt-3" id="mo_oauth_resourceownerdetailsurl_div">
                                                         <div class="mo_boot_col-sm-3">
                                                             <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_INFO_ENDPOINT'); ?></strong>
@@ -846,10 +849,8 @@ function configuration($OauthApp,$appLabel)
                                                         </div>
                                                     </div>
                                             <?php }
-                                        }
-                                    }
-                                    else
-                                    { ?>
+                    }
+        } else { ?>
                                         <div class="mo_boot_row mo_boot_mt-3">
                                             <div class="mo_boot_col-sm-3">
                                                 <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_APP_SCOPE');?></strong>
@@ -884,8 +885,8 @@ function configuration($OauthApp,$appLabel)
                                                 </em>
                                             </div>
                                         </div>
-                                        <?php 
-                                            if(!isset($OauthApp['type']) || $OauthApp['type']=='oauth'){?>
+                                        <?php
+                if (!isset($OauthApp['type']) || $OauthApp['type']=='oauth') {?>
                                                 <div class="mo_boot_row mo_boot_mt-3" id="mo_oauth_resourceownerdetailsurl_div">
                                                     <div class="mo_boot_col-sm-3">
                                                         <strong><span class="mo_oauth_highlight">*</span><?php echo JText::_('COM_MINIORANGE_OAUTH_INFO_ENDPOINT'); ?></strong>
@@ -900,8 +901,8 @@ function configuration($OauthApp,$appLabel)
                                                     </div>
                                                 </div>
                                         <?php }
-                                    }
-                                ?>    
+                }
+    ?>    
                                 <div class="mo_boot_row mo_boot_mt-3">
                                     <div class="mo_boot_col-sm-3">
                                         <b><?php echo JText::_('COM_MINIORANGE_OAUTH_SET_CLIENT_CREDENTIALS');?></b>
@@ -928,7 +929,7 @@ function configuration($OauthApp,$appLabel)
                     </script>
                 </div>
             </div>
-            <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3" <?php echo (($progress=='step3')?'style="display:block"':'style="display:none"'); ?> id="mo_attribute_setting">
+            <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3" <?php echo(($progress=='step3')?'style="display:block"':'style="display:none"'); ?> id="mo_attribute_setting">
                 <div class="mo_boot_col-sm-12 mo_boot_mt-5">
                    <div class="mo_boot_row mo_boot_mt-3">
                         <div class="mo_boot_col-sm-3">
@@ -951,33 +952,30 @@ function configuration($OauthApp,$appLabel)
                             </div>
                             <div class="mo_boot_col-sm-7">
                                 <?php
-                                    if (count($attributesNames) != 0 && count($attributesNames) != 1 ) {
-                                        ?>
+        if (count($attributesNames) != 0 && count($attributesNames) != 1) {
+            ?>
                                         <select required class="mo_boot_form-control mo_boot_h-100" name="mo_oauth_email_attr" id="mo_oauth_email_attr">
                                             <option value="none" selected><?php echo JText::_('COM_MINIORANGE_OAUTH_EMAIL_ATTR_NOTE');?></option>
                                             <?php
-                                                foreach($attributesNames as $key => $value)
-                                                {
-                                                    if($value == $email_attr)
-                                                    {
-                                                        $checked = "selected";
-                                                    }
-                                                    else
-                                                    {
-                                                        $checked = "";
-                                                    }
-                                                    if($value!="")
-                                                        echo"<option ".$checked." value='".$value."'>".$value."</option>";
-                                                }
-                                            ?>
+                    foreach ($attributesNames as $key => $value) {
+                        if ($value == $email_attr) {
+                            $checked = "selected";
+                        } else {
+                            $checked = "";
+                        }
+                        if ($value!="") {
+                            echo"<option ".$checked." value='".$value."'>".$value."</option>";
+                        }
+                    }
+            ?>
                                         </select>
                                         <?php
-                                    } else {
-                                        ?>
+        } else {
+            ?>
                                         <input type="text" name="" class="mo_boot_form-control" disabled placeholder="Click on Test Configuration button above in order to get the attributes" id="">
                                         <?php
-                                    }
-                                ?>
+        }
+    ?>
                                
                             </div>
                         </div>
@@ -987,36 +985,30 @@ function configuration($OauthApp,$appLabel)
                             </div>
                             <div class="mo_boot_col-sm-7">
                                 <?php
-                                    if (count($attributesNames) != 0 && count($attributesNames) != 1 ) 
-                                    {
-                                        ?>
+        if (count($attributesNames) != 0 && count($attributesNames) != 1) {
+            ?>
                                         <select required class="mo_boot_form-control mo_boot_h-100" name="mo_oauth_full_name_attr" id="mo_oauth_full_name_attr">
                                             <option value="none" selected><?php echo JText::_('COM_MINIORANGE_OAUTH_NAME_ATTR_NOTE');?></option>
                                             <?php
-                                                foreach($attributesNames as $key => $value)
-                                                {
-                                                    if($value == $full_name_attr)
-                                                    {
-                                                        $checked = "selected";
-                                                    }
-                                                    else
-                                                    {
-                                                        $checked = "";
-                                                    }
-                                                    if($value!="")
-                                                    echo"<option ".$checked." value='".$value."'>".$value."</option>";
-                                                }
-                                            ?>
+                    foreach ($attributesNames as $key => $value) {
+                        if ($value == $full_name_attr) {
+                            $checked = "selected";
+                        } else {
+                            $checked = "";
+                        }
+                        if ($value!="") {
+                            echo"<option ".$checked." value='".$value."'>".$value."</option>";
+                        }
+                    }
+            ?>
                                         </select>
                                         <?php
-                                    }
-                                    else
-                                    {
-                                        ?>
+        } else {
+            ?>
                                         <input type="text" name="" class="mo_boot_form-control" disabled placeholder="Click on Test Configuration button above in order to get the attributes" id="">
                                         <?php
-                                    }
-                                ?>
+        }
+    ?>
                                 
                             </div>
                         </div>
@@ -1026,36 +1018,30 @@ function configuration($OauthApp,$appLabel)
                             </div>
                             <div class="mo_boot_col-sm-7">
                                 <?php
-                                    if (count($attributesNames) != 0 && count($attributesNames) != 1 ) 
-                                    {
-                                        ?>
+        if (count($attributesNames) != 0 && count($attributesNames) != 1) {
+            ?>
                                         <select required class="mo_boot_form-control mo_boot_h-100" name="mo_oauth_user_name_attr" id="mo_oauth_user_name_attr">
                                             <option value="none" selected><?php echo JText::_('COM_MINIORANGE_OAUTH_USER_NAME_ATTR_NOTE');?></option>
                                             <?php
-                                                foreach($attributesNames as $key => $value)
-                                                {
-                                                    if($value == $user_name_attr)
-                                                    {
-                                                        $checked = "selected";
-                                                    }
-                                                    else
-                                                    {
-                                                        $checked = "";
-                                                    }
-                                                    if($value!="")
-                                                    echo"<option ".$checked." value='".$value."'>".$value."</option>";
-                                                }
-                                            ?>
+                    foreach ($attributesNames as $key => $value) {
+                        if ($value == $user_name_attr) {
+                            $checked = "selected";
+                        } else {
+                            $checked = "";
+                        }
+                        if ($value!="") {
+                            echo"<option ".$checked." value='".$value."'>".$value."</option>";
+                        }
+                    }
+            ?>
                                         </select>
                                         <?php
-                                    }
-                                    else
-                                    {
-                                        ?>
+        } else {
+            ?>
                                         <input type="text" name="" class="mo_boot_form-control" disabled placeholder="Click on Test Configuration button above in order to get the attributes" id="">
                                         <?php
-                                    }
-                                ?>
+        }
+    ?>
                                 
                             </div>
                         </div>
@@ -1067,7 +1053,7 @@ function configuration($OauthApp,$appLabel)
                     </form>
                 </div>
             </div>
-            <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3 " <?php echo (($progress=='step4')?'style="display:block"':'style="display:none"'); ?> id="mo_sso_url">
+            <div class="mo_boot_row mo_boot_m-1 mo_boot_my-3 " <?php echo(($progress=='step4')?'style="display:block"':'style="display:none"'); ?> id="mo_sso_url">
                 <div class=" mo_boot_col-sm-12 mo_boot_mt-5">
                     <div class="mo_boot_row mo_boot_mt-3 mo_boot_mb-5">
                         <div class="mo_boot_col-sm-12 mo_boot_mb-3">
@@ -1492,20 +1478,21 @@ function attributerole()
                         <div class="mo_boot_col-sm-8">
                             <?php
                                 $db = JFactory::getDbo();
-                                $db->setQuery($db->getQuery(true)
-                                    ->select('*')
-                                    ->from("#__usergroups")
-                                );
-                                $groups = $db->loadRowList();
+    $db->setQuery(
+        $db->getQuery(true)
+        ->select('*')
+        ->from("#__usergroups")
+    );
+    $groups = $db->loadRowList();
 
-                                echo '<select class="mo_boot_form-control" style="cursor:pointer" readonly name="mapping_value_default" id="default_group_mapping">';
+    echo '<select class="mo_boot_form-control" style="cursor:pointer" readonly name="mapping_value_default" id="default_group_mapping">';
 
-                                foreach ($groups as $group)
-                                {
-                                    if ($group[4] != 'Super Users'&&$group[4] != 'Public'&&$group[4] != 'Guest')
-                                        echo '<option selected="selected" value = "' . $group[0] . '">' . $group[4] . '</option>';
-                                }
-                            ?>
+    foreach ($groups as $group) {
+        if ($group[4] != 'Super Users'&&$group[4] != 'Public'&&$group[4] != 'Guest') {
+            echo '<option selected="selected" value = "' . $group[0] . '">' . $group[4] . '</option>';
+        }
+    }
+    ?>
                             </select>
                         </div>
                     </div>
@@ -1532,26 +1519,22 @@ function attributerole()
                     </div>
                     <div class="mo_boot_row mo_boot_mt-3">
                         <?php
-                            $user_role = array();
-                            if (empty($role_mapping_key_value)) {
-                                foreach ($groups as $group) {
-                                    if ($group[4] != 'Super Users') {
-                                        echo '<div class="mo_boot_col-sm-4 mo_boot_mt-2">' . $group[4] . '</div><div class="mo_boot_col-sm-8 mo_boot_mt-2"><input class="mo_boot_form-control"  disabled type="text" id="oauth_group_attr_values' . $group[0] . '" name="oauth_group_attr_values' . $group[0] . '" value= "" placeholder="'.JText::_('COM_MINIORANGE_OAUTH_GROUP_ROLE_NAME_IN_CONFIGURED_APP_PLACEHOLDER'). $group[4] . '" "' . ' /></div>';
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                foreach ($groups as $group)
-                                {
-                                    if ($group[4] != 'Super Users')
-                                    {
-                                        $role_value = array_key_exists($group[0], $role_mapping_key_value) ? $role_mapping_key_value[$group[0]] : "";
-                                        echo '<div class="mo_boot_col-sm-4 mo_boot_offset-sm-1"><strong>' . $group[4] . '</strong></div><div class="mo_boot_col-sm-6"><input  class="mo_boot_form-control"  disabled type="text" id="oauth_group_attr_values' . $group[0] . '" name="oauth_group_attr_values' . $group[0] . '" value= "' . $role_value . '" placeholder="'.JText::_('COM_MINIORANGE_OAUTH_GROUP_ROLE_NAME_IN_CONFIGURED_APP_PLACEHOLDER'). $group[4] . '" "' . ' /></div>';
-                                    }
-                                }
-                            }
-                        ?>
+    $user_role = array();
+    if (empty($role_mapping_key_value)) {
+        foreach ($groups as $group) {
+            if ($group[4] != 'Super Users') {
+                echo '<div class="mo_boot_col-sm-4 mo_boot_mt-2">' . $group[4] . '</div><div class="mo_boot_col-sm-8 mo_boot_mt-2"><input class="mo_boot_form-control"  disabled type="text" id="oauth_group_attr_values' . $group[0] . '" name="oauth_group_attr_values' . $group[0] . '" value= "" placeholder="'.JText::_('COM_MINIORANGE_OAUTH_GROUP_ROLE_NAME_IN_CONFIGURED_APP_PLACEHOLDER'). $group[4] . '" "' . ' /></div>';
+            }
+        }
+    } else {
+        foreach ($groups as $group) {
+            if ($group[4] != 'Super Users') {
+                $role_value = array_key_exists($group[0], $role_mapping_key_value) ? $role_mapping_key_value[$group[0]] : "";
+                echo '<div class="mo_boot_col-sm-4 mo_boot_offset-sm-1"><strong>' . $group[4] . '</strong></div><div class="mo_boot_col-sm-6"><input  class="mo_boot_form-control"  disabled type="text" id="oauth_group_attr_values' . $group[0] . '" name="oauth_group_attr_values' . $group[0] . '" value= "' . $role_value . '" placeholder="'.JText::_('COM_MINIORANGE_OAUTH_GROUP_ROLE_NAME_IN_CONFIGURED_APP_PLACEHOLDER'). $group[4] . '" "' . ' /></div>';
+            }
+        }
+    }
+    ?>
                     </div>
                 </div>
                 <div class="mo_boot_col-sm-12">
@@ -1648,23 +1631,18 @@ function moOAuthConfiguration()
 {
     global $license_tab_link;
     global $license_tab_link;
-    $appArray = json_decode(getAppJson(),TRUE);
+    $appArray = json_decode(getAppJson(), true);
     $app = JFactory::getApplication();
     $get = $app->input->get->getArray();
     $attribute = getAppDetails();
-    $isAppConfigured = empty($attribute['client_secret']) || empty($attribute['client_id']) || empty($attribute['custom_app'] )|| empty($attribute['redirecturi'] )?FALSE:TRUE;
-    if(isset($get['moAuthAddApp']) && !empty($get['moAuthAddApp']) )
-    {
-        configuration($appArray[$get['moAuthAddApp']],$get['moAuthAddApp']);
+    $isAppConfigured = empty($attribute['client_secret']) || empty($attribute['client_id']) || empty($attribute['custom_app'])|| empty($attribute['redirecturi'])?false:true;
+    if (isset($get['moAuthAddApp']) && !empty($get['moAuthAddApp'])) {
+        configuration($appArray[$get['moAuthAddApp']], $get['moAuthAddApp']);
         return;
-    }
-    else if($isAppConfigured)
-    {
-        configuration($appArray[$attribute['appname']],$attribute['appname']);
+    } elseif ($isAppConfigured) {
+        configuration($appArray[$attribute['appname']], $attribute['appname']);
         return;
-    }
-    else
-    { ?>
+    } else { ?>
         <div class="mo_boot_row m-0 p-1" style="box-shadow: 0px 0px 15px 5px lightgray;">
             <div class="mo_boot_col-sm-2 m-0 p-0" style="border-right:1px solid #001b4c">
                 <div class="mo_boot_row m-0 p-0">
@@ -1710,7 +1688,8 @@ function moOAuthConfiguration()
     }
 }
 
-function grant_type_settings() {
+function grant_type_settings()
+{
     global $license_tab_link;
     ?>
     <div class="mo_boot_row mo_boot_mr-1 mo_boot_my-3 ">

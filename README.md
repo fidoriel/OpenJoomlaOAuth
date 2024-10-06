@@ -1,6 +1,8 @@
 # joomla-openid
 
 This is adapted from the [miniOrange OAuth Client](https://extensions.joomla.org/extension/access-a-security/miniorange-oauth-client/) at time of forking licensed GLPv2 or later.
+If not stated otherwise in file all code is licensed under GLPv3 or later.
+Images are used under fair use to describe their respective products.
 
 ## Create Login Button
 

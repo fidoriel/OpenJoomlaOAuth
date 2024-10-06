@@ -1,3 +1,4 @@
 *.zip
 .DS_Store
 think.jpg
+.php-cs-fixer.cache
