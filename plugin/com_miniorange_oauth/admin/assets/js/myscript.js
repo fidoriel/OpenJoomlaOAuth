@@ -21,29 +21,6 @@ function copyToClipboard(element1 , element2) {
     temp.remove();
 }
 
-function validateEmail(emailField) 
-{
-    var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-    if (reg.test(emailField.value) == false) 
-    {
-        document.getElementById('email_error').style.display = "block";
-        document.getElementById('submit_button').disabled = true;
-    } 
-    else 
-    {
-        document.getElementById('email_error').style.display = "none";
-        document.getElementById('submit_button').disabled = false;
-    }
-}
-
-
-jQuery(document).ready(function () {
-    jQuery('.premium').click(function () {
-        jQuery('.nav-tabs a[href=#licensing-plans]').tab('show');
-    });
-});
-
-
 
 function upgradeBtn()
 {
@@ -77,53 +54,32 @@ function mo_oauth_show_proxy_form2() {
 	jQuery('#mo_oauth_registered_page').hide();
 }
 
-window.addEventListener('DOMContentLoaded', function(){
-	let supportButtons=document.getElementsByClassName('moJoom-OauthClient-supportButton-SideButton');
-	let supportForms  = document.getElementsByClassName('moJoom-OauthClient-supportForm');
-	for(let i=0;i<supportButtons.length;i++){
-	supportButtons[i].addEventListener("click",function (e) {
-    if (supportForms[i].style.right != "0px") {
-        supportForms[i].style.right= "0px";
+document.addEventListener('DOMContentLoaded', function() {
+    const appSearchInput = document.getElementById('moAuthAppsearchInput');
+    const moAuthAppsList = document.getElementById('moAuthAppsList');
+    
+    if (!appSearchInput || !moAuthAppsList) return;
+
+    const allLis = moAuthAppsList.querySelectorAll('li');
+    const allHtml = moAuthAppsList.innerHTML;
+    const noAppFoundStr = '<li>No applications found in this category, matching your search query. Please configure yourself.</li>';
+
+    appSearchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
         
-    }
-    else {
-        supportForms[i].style.right= "-391px";
-    }
- });
-}
-//  
+        if (searchTerm === '') {
+            moAuthAppsList.innerHTML = allHtml;
+            return;
+        }
 
-let appSearchInput = document.getElementById('moAuthAppsearchInput');
-let moAuthAppsTable = document.getElementById('moAuthAppsTable');
-let allHtml='';
-if(moAuthAppsTable!=null)
-	allHtml         = moAuthAppsTable.innerHTML;
-let allTds = document.querySelectorAll("#moAuthAppsTable tr td");
-noAppFoundStr = '<tr><td>No applications found in this category, matching your search query. Please select a custom application from below OR <b><a href="#" style="cursor:pointer;text-decoration:none;" >Contact Us</a></b> </td></tr>';
-if(appSearchInput!=null)
-appSearchInput.onkeyup=function(e){
-	let j=1;
-	let htmlStr='';
-	for(let i=0;i<allTds.length;i++)
-	{
-		if(allTds[i].attributes.moauthappselector.value.search(new RegExp(appSearchInput.value, "i"))!=-1){
+        const filteredHtml = Array.from(allLis).reduce((html, li) => {
+            const appSelector = li.getAttribute('moAuthAppSelector');
+            if (appSelector && appSelector.toLowerCase().includes(searchTerm)) {
+                html += li.outerHTML;
+            }
+            return html;
+        }, '');
 
-			if(j%6==1 || i==allTds.length){
-				htmlStr=htmlStr+'<tr>';
-			}
-			htmlStr = htmlStr+'<td>'+allTds[i].innerHTML+'</td>';
-			if(j%6==0){
-			 htmlStr=htmlStr+'</tr>'	
-			}
-			j++;
-		}
-	}
-	if(appSearchInput.value=='')
-		moAuthAppsTable.innerHTML=allHtml;
-	else if(j==1)
-		moAuthAppsTable.innerHTML=noAppFoundStr;
-	else
-		moAuthAppsTable.innerHTML=htmlStr;
-	};
-}
-);
+        moAuthAppsList.innerHTML = filteredHtml || noAppFoundStr;
+    });
+});

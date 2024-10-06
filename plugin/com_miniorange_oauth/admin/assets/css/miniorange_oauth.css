@@ -586,18 +586,19 @@ input:checked+.mo_oauth_slider:before{-webkit-transform:translateX(26px);-ms-tra
 .mo_oauth_slider.round:before{border-radius:50%}
 
 /* Hover effect for the selected apps */
-.mo_boot_select_app{
-    text-decoration: none!important;
+.mo_boot_select_app {
+    text-decoration: none !important;
     color: black;
 }
-.mo_boot_select_app div{
-    padding:5px;
-    background:#fff;
-    text-decoration: none!important;
+
+.mo_boot_select_app div {
+    padding: 5px;
+    background: #fff;
+    text-decoration: none !important;
+    border: 1px solid transparent; /* Add this line */
 }
 
-.mo_boot_select_app:hover div{
-    transform: scale(1.05);
-    border: 2px solid #001b4c!important;
-    text-decoration: none!important;
+.mo_boot_select_app:hover div {
+    border: 1px solid #001b4c !important; /* Modified this line */
+    text-decoration: none !important;
 }

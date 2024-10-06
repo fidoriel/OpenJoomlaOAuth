@@ -1,8 +1,10 @@
-# joomla-openid
+# OpenJoomlaOAuth
 
 This is adapted from the [miniOrange OAuth Client](https://extensions.joomla.org/extension/access-a-security/miniorange-oauth-client/) at time of forking licensed GLPv2 or later.
 If not stated otherwise in file all code is licensed under GLPv3 or later.
-Images are used under fair use to describe their respective products.
+I created my own fork to have a more lightweight and customizable and free solution.
+The whole plugin was debloated, all feature limitations removed and the code was cleaned up to some degree and some bugs were fixed.
+It is able to do everything I need but still lacks some features you may expect from a full fledged OAuth client - feel free to contribute, it is free and open source.
 
 ## Create Login Button
 
@@ -23,3 +25,19 @@ For Joomla this could be:
 ```html
 <p><a href="?morequest=oauthredirect&app_name=keycloak&redirect_after_login=https://example.com/index.php/news-intern/aktuelles"> <button>Login Mitgliederbereich mit SSO</button> </a></p>
 ```
+
+## Development
+
+Format with 
+```bash
+php-cs-fixer fix --rules=@PSR2 plugin/
+```
+Build a zip file with joomla plugin structure with
+```bash
+bash package.sh
+```
+
+You can enable debug mode in joomla settings:
+Global Settings -> System -> Debug System -> Yes
+Enable error reporting in joomla settings:
+Global Settings -> Server -> Error Reporting -> Maximum
