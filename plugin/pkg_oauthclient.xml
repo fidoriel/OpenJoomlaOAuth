@@ -10,24 +10,24 @@
 	<description>OpenJoomlaOAuth Client Plugin Installed Successfully!</description>
 	<scriptfile>pkg_script.php</scriptfile>
 	<files>
-		<file type="plugin" id="miniorangeoauth" group="system">plg_system_miniorangeoauth.zip</file>
-		<file type="component" id="miniorange_oauth" >com_miniorange_oauth.zip</file>
+		<file type="plugin" id="openjoomlaoauth" group="system">plg_system_openjoomlaoauth.zip</file>
+		<file type="component" id="openjoomla_oauth" >com_openjoomla_oauth.zip</file>
 	</files>
 	<languages folder="language">
-		<language tag="en-GB">en-GB/en-GB.pkg_miniorangeoauth.ini</language>
-		<language tag="en-GB">en-GB/en-GB.pkg_miniorangeoauth.sys.ini</language>
-		<language tag="de-DE">de-DE/de-DE.pkg_miniorangeoauth.ini</language>
-		<language tag="de-DE">de-DE/de-DE.pkg_miniorangeoauth.sys.ini</language>
-		<language tag="es-ES">es-ES/es-ES.pkg_miniorangeoauth.ini</language>
-		<language tag="es-ES">es-ES/es-ES.pkg_miniorangeoauth.sys.ini</language>
-		<language tag="ja-JP">ja-JP/ja-JP.pkg_miniorangeoauth.ini</language>
-		<language tag="ja-JP">ja-JP/ja-JP.pkg_miniorangeoauth.sys.ini</language>
-		<language tag="ru-RU">ru-RU/ru-RU.pkg_miniorangeoauth.ini</language>
-		<language tag="ru-RU">ru-RU/ru-RU.pkg_miniorangeoauth.sys.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.pkg_miniorangeoauth.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.pkg_miniorangeoauth.sys.ini</language>
-		<language tag="it-IT">it-IT/it-IT.pkg_miniorangeoauth.ini</language>
-		<language tag="it-IT">it-IT/it-IT.pkg_miniorangeoauth.sys.ini</language>
+		<language tag="en-GB">en-GB/en-GB.pkg_openjoomlaoauth.ini</language>
+		<language tag="en-GB">en-GB/en-GB.pkg_openjoomlaoauth.sys.ini</language>
+		<language tag="de-DE">de-DE/de-DE.pkg_openjoomlaoauth.ini</language>
+		<language tag="de-DE">de-DE/de-DE.pkg_openjoomlaoauth.sys.ini</language>
+		<language tag="es-ES">es-ES/es-ES.pkg_openjoomlaoauth.ini</language>
+		<language tag="es-ES">es-ES/es-ES.pkg_openjoomlaoauth.sys.ini</language>
+		<language tag="ja-JP">ja-JP/ja-JP.pkg_openjoomlaoauth.ini</language>
+		<language tag="ja-JP">ja-JP/ja-JP.pkg_openjoomlaoauth.sys.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.pkg_openjoomlaoauth.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.pkg_openjoomlaoauth.sys.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.pkg_openjoomlaoauth.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.pkg_openjoomlaoauth.sys.ini</language>
+		<language tag="it-IT">it-IT/it-IT.pkg_openjoomlaoauth.ini</language>
+		<language tag="it-IT">it-IT/it-IT.pkg_openjoomlaoauth.sys.ini</language>
 	</languages>
 	<!-- <updateservers>
 		<server type="extension" priority="1" name="oauthclient">https://miniorange.com/joomla_oauth_client_update.xml</server>

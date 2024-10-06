@@ -5,6 +5,7 @@ If not stated otherwise in file all code is licensed under GLPv3 or later.
 I created my own fork to have a more lightweight and customizable and free solution.
 The whole plugin was debloated, all feature limitations removed and the code was cleaned up to some degree and some bugs were fixed.
 It is able to do everything I need but still lacks some features you may expect from a full fledged OAuth client - feel free to contribute, it is free and open source.
+There is currently no role mapping and no way to configure a custom attribute mapping.
 
 ## Create Login Button
 
@@ -15,7 +16,7 @@ Create a new `Custom` Site Module with a button link. You can copy your link fro
 This is a example for Keycloak:
 
 ```html
-<a href="?morequest=oauthredirect&app_name=keycloak"> <button>Log In with SSO</button> </a>
+<a href="?openjoomlarequest=oauthredirect&app_name=keycloak"> <button>Log In with SSO</button> </a>
 ```
 
 You can add a `redirect_after_login` parameter to the link to set the redirect after login url. Make sure to url encode the value.
@@ -23,7 +24,7 @@ You can add a `redirect_after_login` parameter to the link to set the redirect a
 For Joomla this could be:
 
 ```html
-<p><a href="?morequest=oauthredirect&app_name=keycloak&redirect_after_login=https://example.com/index.php/news-intern/aktuelles"> <button>Login Mitgliederbereich mit SSO</button> </a></p>
+<p><a href="?openjoomlarequest=oauthredirect&app_name=keycloak&redirect_after_login=https://example.com/index.php/news-intern/aktuelles"> <button>Login Mitgliederbereich mit SSO</button> </a></p>
 ```
 
 ## Development

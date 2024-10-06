@@ -3,12 +3,24 @@
 defined('_JEXEC') or die('Restricted access');
 
 /**
- * Script file of openjoomla_oauth_plugin.
+ * Script file of openjoomla_oauth_system_plugin.
  *
+ * The name of this class is dependent on the component being installed.
+ * The class name should have the component's name, directly followed by
+ * the text InstallerScript (ex:. com_helloWorldInstallerScript).
+ *
+ * This class will be called by Joomla!'s installer, if specified in your component's
+ * manifest file, and is used for custom automation actions in its installation process.
+ *
+ * In order to use this automation script, you should reference it in your component's
+ * manifest file as follows:
+ * <scriptfile>script.php</scriptfile>
+ *
+
  * @copyright   Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
-class pkg_oauthclientInstallerScript
+class plgSystemOpenjoomlaoauthInstallerScript
 {
     /**
      * This method is called after a component is installed.
@@ -20,7 +32,14 @@ class pkg_oauthclientInstallerScript
     public function install($parent)
     {
 
-            
+        $db  = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->update('#__extensions');
+        $query->set($db->quoteName('enabled') . ' = 1');
+        $query->where($db->quoteName('element') . ' = ' . $db->quote('openjoomlaoauth'));
+        $query->where($db->quoteName('type') . ' = ' . $db->quote('plugin'));
+        $db->setQuery($query);
+        $db->execute();
     }
 
     /**
@@ -78,48 +97,5 @@ class pkg_oauthclientInstallerScript
     public function postflight($type, $parent)
     {
         // echo '<p>' . JText::_('COM_HELLOWORLD_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
-        if ($type == 'uninstall') {
-            return true;
-        }
-        $this->showInstallMessage('');
     }
-
-    protected function showInstallMessage($messages=array())
-    {
-        ?>
-        <style>
-        
-	.oj-row {
-		width: 100%;
-		display: block;
-		margin-bottom: 2%;
-	}
-
-	.oj-row:after {
-		clear: both;
-		display: block;
-		content: "";
-	}
-
-	.oj-column-2 {
-		width: 19%;
-		margin-right: 1%;
-		float: left;
-	}
-
-	.oj-column-10 {
-		width: 80%;
-		float: left;
-	}
-    </style>
-   
-    <h3>Steps to use the OAuth Client plugin.</h3>
-    <ul>
-    <li>Click on <b>Components</b></li>
-    <li>Click on <b>OpenJoomlaOAuth Client</b> and select <b>Configure OAuth</b> tab</li>
-    <li>You can start configuring.</li>
-    </ul>
-        <?php
-    }
-
 }
