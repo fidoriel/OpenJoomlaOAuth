@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `#__openjoomlaoauth_config` ( 
+CREATE TABLE IF NOT EXISTS `#__openjoomla_oauth_config` ( 
 `id` int(11) UNSIGNED NOT NULL ,
 `appname` VARCHAR(255)  NOT NULL ,
 `custom_app` VARCHAR(255) NOT NULL ,
@@ -24,4 +24,14 @@ CREATE TABLE IF NOT EXISTS `#__openjoomlaoauth_config` (
 PRIMARY KEY (`id`)
 ) DEFAULT COLLATE=utf8_general_ci;
 
-INSERT IGNORE INTO `#__openjoomlaoauth_config`(`id`) values (1);
+CREATE TABLE IF NOT EXISTS `#__openjoomla_role_mapping` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `usergroup_id` int(10) unsigned NOT NULL,
+    `role_string` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_usergroup_role` (`usergroup_id`, `role_string`(191)),
+    CONSTRAINT `fk_oauth_usergroup` FOREIGN KEY (`usergroup_id`) 
+        REFERENCES `#__usergroups` (`id`) ON DELETE CASCADE
+) DEFAULT COLLATE=utf8_general_ci;
+
+INSERT IGNORE INTO `#__openjoomla_oauth_config`(`id`) values (1);
