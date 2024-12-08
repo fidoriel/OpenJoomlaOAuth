@@ -35,8 +35,7 @@ if (MoOAuthUtility::is_curl_installed() == 0) { ?>
 }
 $active_tab = JFactory::getApplication()->input->get->getArray();
 $oauth_active_tab = isset($active_tab['tab-panel']) && !empty($active_tab['tab-panel']) ? $active_tab['tab-panel'] : 'configuration';
-global $license_tab_link;
-$license_tab_link="index.php?option=com_openjoomla_oauth&view=accountsetup&tab-panel=license";
+
 $current_user = JFactory::getUser();
 if (!JPluginHelper::isEnabled('system', 'openjoomlaoauth')) {
     ?>
@@ -1030,7 +1029,6 @@ function getAppDetails()
 }
 function configuration($OauthApp, $appLabel)
 {
-    global $license_tab_link;
     $attribute = getAppDetails();
     $appJson = json_decode(getAppJson(), true);
     $appData = json_decode(getAppData(), true);
@@ -1652,7 +1650,6 @@ function configuration($OauthApp, $appLabel)
 }
 function attributerole()
 {
-    global $license_tab_link;
     $attribute = getAppDetails();
     $email = isset($attribute['email_attr'])?$attribute['email_attr']:"";
     $fullname = isset($attribute['full_name_attr'])?$attribute['full_name_attr']:"";
@@ -1686,42 +1683,29 @@ function attributerole()
                                 </div>
                             </div>
                         </div>
-                        <div class="oj_boot_col-sm-12">
-                            <div class="oj_boot_row">
-                                <div class="oj_boot_col-sm-3">
-                                    <label for=""><span class="oj_oauth_highlight">*</span>Username :</label>
-                                </div>
-                                <div class="oj_boot_col-sm-9">
-                                    <input class="oj_boot_form-control" readonly type="text" id="oj_oauth_uname_attr" name="oj_oauth_uname_attr" value='<?php echo $username?>' placeholder="Enter the Username attribute name from oauth provider" required>
-                                </div>
-                            </div>
-                            <div class="oj_boot_row oj_boot_mt-3">
-                                <div class="oj_boot_col-sm-3">
-                                    <label for=""><span class="oj_oauth_highlight">*</span>Email :</label>
-                                </div>
-                                <div class="oj_boot_col-sm-9">
-                                    
-                                    <input class="oj_boot_form-control" readonly type="text" name="oj_oauth_email_attr" value='<?php echo $email?>' placeholder="Enter the Email attribute name from oauth provider" required>
-                                </div>
-                            </div>
-                            <div class="oj_boot_row oj_boot_mt-3">
-                                <div class="oj_boot_col-sm-3">
-                                    <label for="">
-                                        <span class="oj_oauth_highlight">*</span>Display Name :
-                                    </label>    
-                                </div>
-                                <div class="oj_boot_col-sm-9">
-                                    
-                                    <input class="oj_boot_form-control" disabled type="text"  id="oj_oauth_dname_attr" name="oj_oauth_dname_attr" value='<?php echo $fullname?>' placeholder="Enter the Username attribute name from oauth provider" value=''>
-                                </div>
-                            </div>
+                        <?php foreach($userGroups as $group): ?>
                             <div class="oj_boot_row oj_boot_mt-2">
-                                <div class="oj_boot_col-sm-12 oj_boot_mt-3 oj_boot_text-right">
-                                    <input type="submit" disabled style="cursor:not-allowed" name="send_query" value='<?php echo JText::_('COM_OPENJOOMLA_OAUTH_SAVE_ATTRIBUTE_MAPPING');?>' style="margin-bottom:3%;" class="oj_boot_btn oj_boot_btn-primary p-2"/>
+                                <div class="oj_boot_col-sm-3">
+                                    <label><span class="oj_oauth_highlight">*</span>OAuth Role:</label>
+                                </div>
+                                <div class="oj_boot_col-sm-4">
+                                    <input 
+                                        class="oj_boot_form-control" 
+                                        type="text" 
+                                        name="oauth_role[<?php echo $group->id; ?>]"
+                                        value="<?php echo isset($roleMappings[$group->id]) ? htmlspecialchars($roleMappings[$group->id]) : ''; ?>"
+                                        placeholder="Enter OAuth role name"
+                                    >
+                                </div>
+                                <div class="oj_boot_col-sm-5">
+                                    <select class="oj_boot_form-control" disabled>
+                                        <option value="<?php echo $group->id; ?>">
+                                            <?php echo $group->title; ?>
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-                        
+                        <?php endforeach; ?>                 
                     </div>  
                 </div>
             </div> 
@@ -1742,8 +1726,6 @@ function attributerole()
 
 function moOAuthConfiguration()
 {
-    global $license_tab_link;
-    global $license_tab_link;
     $appArray = json_decode(getAppJson(), true);
     $app = JFactory::getApplication();
     $get = $app->input->get->getArray();
