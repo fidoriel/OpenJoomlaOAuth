@@ -35,7 +35,6 @@ if (MoOAuthUtility::is_curl_installed() == 0) { ?>
 }
 $active_tab = JFactory::getApplication()->input->get->getArray();
 $oauth_active_tab = isset($active_tab['tab-panel']) && !empty($active_tab['tab-panel']) ? $active_tab['tab-panel'] : 'configuration';
-
 $current_user = JFactory::getUser();
 if (!JPluginHelper::isEnabled('system', 'openjoomlaoauth')) {
     ?>
@@ -1022,7 +1021,7 @@ function getAppDetails()
     $db = JFactory::getDbo();
     $query = $db->getQuery(true);
     $query->select('*');
-    $query->from($db->quoteName('#__openjoomlaoauth_config'));
+    $query->from($db->quoteName('#__openjoomla_oauth_config'));
     $query->where($db->quoteName('id') . " = 1");
     $db->setQuery($query);
     return $db->loadAssoc();
@@ -1648,79 +1647,65 @@ function configuration($OauthApp, $appLabel)
     </script>  
     <?php
 }
+
 function attributerole()
 {
-    $attribute = getAppDetails();
-    $email = isset($attribute['email_attr'])?$attribute['email_attr']:"";
-    $fullname = isset($attribute['full_name_attr'])?$attribute['full_name_attr']:"";
-    $username = isset($attribute['user_name_attr'])?$attribute['user_name_attr']:"";
+    $db = JFactory::getDbo();
+    
+    // Get all usergroups
+    $query = $db->getQuery(true)
+        ->select('id, title, parent_id')
+        ->from('#__usergroups')
+        ->order('lft ASC');
+    $db->setQuery($query);
+    $usergroups = $db->loadObjectList();
+
+    // Get existing mappings
+    $query = $db->getQuery(true)
+        ->select('usergroup_id, role_string')
+        ->from('#__openjoomla_role_mapping');
+    $db->setQuery($query);
+    $mappings = $db->loadAssocList('usergroup_id');
+
     ?>
-    <div class="oj_boot_row m-0 p-1" style="box-shadow: 0px 0px 15px 5px lightgray;">
-        <div class="oj_boot_col-sm-2 m-0 p-0" style="border-right:1px solid #001b4c">
-            <div class="oj_boot_row m-0 p-0">
-                <div class="oj_boot_col-sm-12 m-0 p-0">
-                    <div onclick = "changeSubMenu(this , '#oj_basic_mapping')" class="oj_sub_menu oj_sub_menu_active">
-                        <span>Basic Attribute's</span>
-                    </div>
+    <form id="oauth_config_role_mapping" method="post" action="<?php echo JRoute::_('index.php?option=com_openjoomla_oauth&view=accountsetup&task=accountsetup.saveConfig'); ?>">
+        <input type="hidden" name="oauth_config_role_mapping" value="true">    
+        <div class="oj_boot_row m-0 p-1" style="box-shadow: 0px 0px 15px 5px lightgray;">
+            <div class="oj_boot_col-sm-12">
+                <h3>Role Mapping Configuration</h3>
+                <p>To make a Joomla Group default, use "default-roles-{realm-name}" as Role String.</p>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Usergroup</th>
+                            <th>Role String</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($usergroups as $group):
+                        $roleString = isset($mappings[$group->id]) ? $mappings[$group->id]['role_string'] : '';
+                        ?>
+                        <tr>
+                            <td><?php echo $group->title; ?></td>
+                            <td>
+                                <input type="text" 
+                                       class="form-control" 
+                                       name="roles[<?php echo $group->id; ?>]" 
+                                       value="<?php echo htmlspecialchars($roleString); ?>"
+                                       placeholder="Enter role string">
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <div class="oj_boot_text-right">
+                    <button type="submit" class="oj_boot_btn oj_boot_btn-primary" name="save_roles">
+                        <?php echo JText::_('Save Role Mappings'); ?>
+                    </button>
                 </div>
             </div>
         </div>
-        <div class="oj_boot_col-sm-10">
-            <div class="oj_boot_row oj_boot_m-1 oj_boot_my-3" id="oj_basic_mapping">
-                <div class="oj_boot_col-sm-12 oj_boot_mt-2" id="oj_oauth_attributemapping">
-                    <div class="oj_boot_row oj_boot_mt-2">
-                        <div class="oj_boot_col-sm-12">
-                            <h5 class="element">
-                                Map Basic User Attribute 
-                            </h5>
-                            <br>
-                        </div>
-                        <br><br>
-                        <div class="oj_boot_col-sm-12">
-                            <div class="oj_boot_row">
-                                <div class="oj_boot_col-sm-12">
-                                    <p> Configure the Basic attribute of joomla to the attribute coming from the OAuth Provider</p>
-                                </div>
-                            </div>
-                        </div>
-                        <?php foreach($userGroups as $group): ?>
-                            <div class="oj_boot_row oj_boot_mt-2">
-                                <div class="oj_boot_col-sm-3">
-                                    <label><span class="oj_oauth_highlight">*</span>OAuth Role:</label>
-                                </div>
-                                <div class="oj_boot_col-sm-4">
-                                    <input 
-                                        class="oj_boot_form-control" 
-                                        type="text" 
-                                        name="oauth_role[<?php echo $group->id; ?>]"
-                                        value="<?php echo isset($roleMappings[$group->id]) ? htmlspecialchars($roleMappings[$group->id]) : ''; ?>"
-                                        placeholder="Enter OAuth role name"
-                                    >
-                                </div>
-                                <div class="oj_boot_col-sm-5">
-                                    <select class="oj_boot_form-control" disabled>
-                                        <option value="<?php echo $group->id; ?>">
-                                            <?php echo $group->title; ?>
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>                 
-                    </div>  
-                </div>
-            </div> 
-        </div>
-    </div>
-    <script>
-       function changeSubMenu(element0,element1)
-       {
-            jQuery(".oj_sub_menu_active").removeClass("oj_sub_menu_active");
-            jQuery(element0).addClass("oj_sub_menu_active");
-            jQuery(element1).nextAll('div').css('display', 'none');
-            jQuery(element1).prevAll().css('display', 'none');
-            jQuery(element1).css("display", "block");
-       }
-    </script>
+    </form>
     <?php
 }
 

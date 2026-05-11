@@ -32,6 +32,10 @@ class openjoomlaoauthControllerAccountSetup extends JControllerForm
     public function saveConfig()
     {
         $post =	JFactory::getApplication()->input->post->getArray();
+
+        $returnURL  = 'index.php?option=com_openjoomla_oauth';
+        $errMessage = '';
+
         $appD = new MoOauthCustomer();
         if (count($post)==0) {
             $this->setRedirect('index.php?option=com_openjoomla_oauth&view=accountsetup');
@@ -53,7 +57,7 @@ class openjoomlaoauthControllerAccountSetup extends JControllerForm
                     $db->quoteName('id') . ' = 1'
                 );
 
-                $query->update($db->quoteName('#__openjoomlaoauth_config'))->set($fields)->where($conditions);
+                $query->update($db->quoteName('#__openjoomla_oauth_config'))->set($fields)->where($conditions);
                 $db->setQuery($query);
                 $result = $db->execute();
                 $returnURL  = 'index.php?option=com_openjoomla_oauth&view=accountsetup&ojAuthAddApp='.$post['oj_oauth_app_name'].'&progress=step2';
@@ -137,11 +141,40 @@ class openjoomlaoauthControllerAccountSetup extends JControllerForm
                 $db->quoteName('id') . ' = 1'
             );
     
-            $query->update($db->quoteName('#__openjoomlaoauth_config'))->set($fields)->where($conditions);
+            $query->update($db->quoteName('#__openjoomla_oauth_config'))->set($fields)->where($conditions);
             $db->setQuery($query);
             $result = $db->execute();
             $returnURL  = 'index.php?option=com_openjoomla_oauth&view=accountsetup&ojAuthAddApp='.$post['oj_oauth_app_name'].'&progress=step3';
             $errMessage = 'Your configuration completed successfully! Now, proceed to Step 3 to configure the basic attribute mapping';
+        } elseif (isset($post['oauth_config_role_mapping'])) {
+
+            $db = JFactory::getDbo();
+            $roles = $post['roles'];
+        
+            // Clear existing mappings
+            $query = $db->getQuery(true)
+                ->delete('#__openjoomla_role_mapping');
+            $db->setQuery($query);
+            $db->execute();
+        
+            // Insert new mappings
+            $values = array();
+            foreach ($roles as $groupId => $roleString) {
+                if (empty($roleString)) {
+                    continue;
+                }
+                
+                $values[] = $db->quote((int)$groupId) . ',' . $db->quote($roleString);
+            }
+        
+            if (!empty($values)) {
+                $query = 'INSERT INTO #__openjoomla_role_mapping (usergroup_id, role_string) VALUES (' .
+                         implode('),(', $values) . ')';
+                $db->setQuery($query);
+                $db->execute();
+            }
+            $returnURL  = 'index.php?option=com_openjoomla_oauth&view=accountsetup&tab-panel=attrrolemapping';
+            $errMessage = 'Your Role Mapping has been saved';
         }
 
         $this->setRedirect($returnURL, $errMessage);
@@ -167,7 +200,7 @@ class openjoomlaoauthControllerAccountSetup extends JControllerForm
             $db->quoteName('id') . ' = 1'
         );
 
-        $query->update($db->quoteName('#__openjoomlaoauth_config'))->set($fields)->where($conditions);
+        $query->update($db->quoteName('#__openjoomla_oauth_config'))->set($fields)->where($conditions);
         $db->setQuery($query);
         $result = $db->execute();
 
@@ -213,7 +246,7 @@ class openjoomlaoauthControllerAccountSetup extends JControllerForm
             $db->quoteName('id') . ' = 1'
         );
 
-        $query->update($db->quoteName('#__openjoomlaoauth_config'))->set($fields)->where($conditions);
+        $query->update($db->quoteName('#__openjoomla_oauth_config'))->set($fields)->where($conditions);
         $db->setQuery($query);
         $result = $db->execute();
 
@@ -235,7 +268,7 @@ class openjoomlaoauthControllerAccountSetup extends JControllerForm
     
     public function exportConfiguration()
     {
-        $appDetails = $this->retrieveAttributes('#__openjoomlaoauth_config');
+        $appDetails = $this->retrieveAttributes('#__openjoomla_oauth_config');
         $clientid = $appDetails['client_id'];
 
         if ($clientid =='' && $clientsecret =='') {
@@ -270,7 +303,7 @@ class openjoomlaoauthControllerAccountSetup extends JControllerForm
 
     public function moOAuthProxyConfigReset()
     {
-        $nameOfDatabase= '#__openjoomlaoauth_config';
+        $nameOfDatabase= '#__openjoomla_oauth_config';
         $updateFieldsArray = array('proxy_server_url' => '', 'proxy_server_port' => '80', 'proxy_username' => '', 'proxy_password' => '', 'proxy_set' => '');
         
         $this->updateDatabaseQuery($nameOfDatabase, $updateFieldsArray);
@@ -286,7 +319,7 @@ class openjoomlaoauthControllerAccountSetup extends JControllerForm
         $proxy_username = isset($post['proxy_username'])? $post['proxy_username'] : '';
         $proxy_password = isset($post['proxy_password'])? $post['proxy_password'] : '';
 
-        $nameOfDatabase = '#__openjoomlaoauth_config';
+        $nameOfDatabase = '#__openjoomla_oauth_config';
         $updateFieldsArray = array(
             'proxy_server_url' 	  	  => $proxy_server_url,
             'proxy_server_port' 	  => $proxy_server_port,
