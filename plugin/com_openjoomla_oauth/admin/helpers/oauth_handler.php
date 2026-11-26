@@ -37,7 +37,8 @@ class OpenOAuthHandler
         curl_setopt($ch, CURLOPT_ENCODING, "");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-        self::applySecureCurlOptions($ch);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
         curl_setopt($ch, CURLOPT_POST, true);
         
@@ -136,7 +137,8 @@ class OpenOAuthHandler
         curl_setopt($ch, CURLOPT_ENCODING, "");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-        self::applySecureCurlOptions($ch);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
         curl_setopt($ch, CURLOPT_POST, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -189,11 +191,5 @@ class OpenOAuthHandler
         $errorText = is_array($this->error) ? print_r($this->error, true) : (string) $this->error;
         echo nl2br(htmlspecialchars($errorText, ENT_QUOTES, 'UTF-8'), false);
         exit;
-    }
-
-    private static function applySecureCurlOptions($ch)
-    {
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
     }
 }
