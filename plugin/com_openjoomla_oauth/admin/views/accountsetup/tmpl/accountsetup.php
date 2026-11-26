@@ -1683,7 +1683,7 @@ function attributerole()
                                 </div>
                             </div>
                         </div>
-                        <?php foreach($userGroups as $group): ?>
+                        <?php foreach ($userGroups as $group): ?>
                             <div class="oj_boot_row oj_boot_mt-2">
                                 <div class="oj_boot_col-sm-3">
                                     <label><span class="oj_oauth_highlight">*</span>OAuth Role:</label>

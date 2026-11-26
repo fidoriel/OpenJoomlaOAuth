@@ -31,7 +31,7 @@ For Joomla this could be:
 
 Format with 
 ```bash
-php-cs-fixer fix --rules=@PSR2 plugin/
+php-cs-fixer fix
 ```
 Build a zip file with joomla plugin structure with
 ```bash
