@@ -59,32 +59,49 @@ class plgSystemOpenjoomlaoauth extends JPlugin
 
         /*----------------------Test Configuration Handling----------------------------*/
         if (isset($get['openjoomlarequest']) and $get['openjoomlarequest'] == 'testattrmappingconfig') {
-            $oj_oauth_app_name = $get['app'];
-            $result=$app->redirect(JRoute::_(JURI::root() . '?openjoomlarequest=oauthredirect&app_name=' . urlencode($oj_oauth_app_name) . '&test=true'));
+            $this->includeHelper('oj_oauth_utility.php');
+            $oj_oauth_app_name = isset($get['app']) ? (string) $get['app'] : '';
+            $testExpires = isset($get['test_expires']) ? (int) $get['test_expires'] : 0;
+            $testToken = isset($get['test_token']) ? (string) $get['test_token'] : '';
+            if (!MoOAuthUtility::verifyOAuthTestSignature($oj_oauth_app_name, $testExpires, $testToken)) {
+                throw new RuntimeException(JText::_('JERROR_ALERTNOAUTHOR'), 403);
+            }
+            $result=$app->redirect(JRoute::_(JURI::root() . '?openjoomlarequest=oauthredirect&app_name=' . urlencode($oj_oauth_app_name) . '&test=true&test_expires=' . $testExpires . '&test_token=' . urlencode($testToken)));
         }
 
         /*-------------------------OAuth SSO starts with this if-----------*/
         /*            Opening of OAuth server dialog box
                      Step 1 of Oauth/OpenID flow
         */ elseif (isset($get['openjoomlarequest']) and $get['openjoomlarequest'] == 'oauthredirect') {
-            $appname = $get['app_name'];
+            $this->includeHelper('oj_oauth_utility.php');
+            $appname = isset($get['app_name']) ? (string) $get['app_name'] : '';
+
+            // test mode is only allowed with a signature issued by the admin backend and is kept server side
+            $session->clear('oj_oauth_test');
             if (isset($get['test'])) {
-                setcookie("oj_oauth_test", true);
-            } else {
-                setcookie("oj_oauth_test", false);
+                $testExpires = isset($get['test_expires']) ? (int) $get['test_expires'] : 0;
+                $testToken = isset($get['test_token']) ? (string) $get['test_token'] : '';
+                if (!MoOAuthUtility::verifyOAuthTestSignature($appname, $testExpires, $testToken)) {
+                    throw new RuntimeException(JText::_('JERROR_ALERTNOAUTHOR'), 403);
+                }
+                $session->set('oj_oauth_test', true);
             }
 
             // save the referrer in cookie so that we can come back to origin after SSO
+            $loginredirurl = '';
             if (isset($get['redirect_after_login'])) {
                 $loginredirurl = urldecode($get['redirect_after_login']);
             } elseif (isset($_SERVER['HTTP_REFERER'])) {
                 $loginredirurl = $_SERVER['HTTP_REFERER'];
             }
+            $loginredirurl = MoOAuthUtility::getSafePostLoginRedirectUrl($loginredirurl, '');
 
-            if (!empty($loginredirurl)) {
-                setcookie("returnurl", $loginredirurl);
+            if ($loginredirurl !== '') {
+                setcookie("returnurl", $loginredirurl, MoOAuthUtility::getSecureCookieOptions());
+            } else {
+                MoOAuthUtility::clearReturnUrlCookie();
             }
-            
+
             // get Ouath configuration from database
             
             $appdata = $this->fetchDb('#__openjoomlaoauth_config', array('custom_app'=>$appname));
@@ -98,7 +115,7 @@ class plgSystemOpenjoomlaoauth extends JPlugin
                 exit;
             }
 
-            $state = base64_encode($appname);
+            $state = bin2hex(random_bytes(32));
             $authorizationUrl = $appdata['authorize_endpoint'];
 
             if (strpos($authorizationUrl, '?') !== false) {
@@ -122,19 +139,19 @@ class plgSystemOpenjoomlaoauth extends JPlugin
                 session_start();
             }
             try {
-                // get the app name from session or by decoding state
-                $currentappname = "";
-                $session_var = $session->get('appname');
-                if (isset($session_var) && !empty($session_var)) {
-                    $currentappname = $session->get('appname');
-                } elseif (isset($get['state']) && !empty($get['state'])) {
-                    $currentappname = base64_decode($get['state']);
+                // the state must match the one stored when this session started the flow
+                $providedState = isset($get['state']) ? (string) $get['state'] : '';
+                $sessionState = (string) $session->get('oauth2state', '');
+                $session->clear('oauth2state');
+                if ($providedState === '' || $sessionState === '' || !hash_equals($sessionState, $providedState)) {
+                    exit('Invalid OAuth state. Please start the login again.');
                 }
-                if (empty($currentappname)) {
+
+                $appname = $session->get('appname');
+                if (empty($appname)) {
                     exit('No request found for this application.');
                 }
                 // get OAuth configuration
-                $appname = $session->get('appname');
                 $name_attr = "";
                 $email_attr = "";
                 $user_name_attr="";
@@ -155,8 +172,8 @@ class plgSystemOpenjoomlaoauth extends JPlugin
                 if (!$currentapp) {
                     exit('Application not configured.');
                 }
-                $authBase = JPATH_BASE . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_openjoomla_oauth';
-                include_once $authBase . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'oauth_handler.php';
+                $this->includeHelper('oauth_handler.php');
+                $this->includeHelper('oj_oauth_utility.php');
                 $oj_oauth_handler = new OpenOAuthHandler();
                 /*
                  * make a back channel request for access token
@@ -268,9 +285,11 @@ class plgSystemOpenjoomlaoauth extends JPlugin
         } else {
             $email="there";
         }
+        $email = htmlspecialchars(is_scalar($email) ? (string) $email : '', ENT_QUOTES, 'UTF-8');
         echo '<div style="font-family:Calibri;padding:0 3%;">';
-        $test_cookie = JFactory::getApplication()->input->cookie->get('oj_oauth_test');
-        if (isset($test_cookie) && !empty($test_cookie)) {
+        $isTest = $session->get('oj_oauth_test', false);
+        $session->clear('oj_oauth_test');
+        if ($isTest) {
             $attributesName = "";
             echo '<div style="color: #3c763d;
                 background-color: #dff0d8; padding:2%;margin-bottom:20px;text-align:center; border:1px solid #AEDB9A; font-size:18pt;">TEST SUCCESSFUL</div>
@@ -336,9 +355,9 @@ class plgSystemOpenjoomlaoauth extends JPlugin
             } else {
                 echo "<tr><td style='font-weight:bold;border:2px solid #949090;padding:2%;'>";
                 if (!empty($nestedprefix)) {
-                    echo $nestedprefix;
+                    echo htmlspecialchars((string) $nestedprefix, ENT_QUOTES, 'UTF-8');
                 }
-                echo $key."</td><td style='padding:2%;border:2px solid #949090; word-wrap:break-word;'>" . $resource . "</td></tr>";
+                echo htmlspecialchars((string) $key, ENT_QUOTES, 'UTF-8') . "</td><td style='padding:2%;border:2px solid #949090; word-wrap:break-word;'>" . htmlspecialchars((string) $resource, ENT_QUOTES, 'UTF-8') . "</td></tr>";
                 $this->attributesNames.= $nestedprefix.$key.',';
             }
         }
@@ -382,23 +401,36 @@ class plgSystemOpenjoomlaoauth extends JPlugin
     {
         $app = JFactory::getApplication();
         $user = JUser::getInstance($checkUser->id);
+
+        if (empty($user->id) || (int) $user->block === 1 || !$user->authorise('core.login.site')) {
+            MoOAuthUtility::clearReturnUrlCookie();
+            $app->enqueueMessage(JText::_('JGLOBAL_AUTH_ACCESS_DENIED'), 'error');
+            $app->redirect(JURI::root() . 'index.php?option=com_users&view=login');
+            return;
+        }
+
         $this->updateCurrentUser($user->id, $name);
         $session = JFactory::getSession(); #Get current session vars
+        // new session id after login to prevent session fixation
+        $session->fork();
         // Register the needed session variables
         $session->set('user', $user);
-        //$app->checkSession();
         $sessionId = $session->getId();
         $this->updateUsernameToSessionId($user->id, $user->username, $sessionId);
 
         $user->setLastVisit();
-        $db = JFactory::getDbo();
-        
-        $returnurl = JFactory::getApplication()->input->cookie->getArray();
-        if (isset($returnurl['returnurl'])) {
-            $redirectloginuri = $returnurl['returnurl'];
-        } else {
-            $redirectloginuri = JURI::root() . 'index.php?';
-        }
+
+        // let Joomla's user plugins (session metadata, action logs, ...) handle the login
+        JPluginHelper::importPlugin('user');
+        $app->triggerEvent('onUserLogin', array(
+            array('username' => $user->username, 'userid' => $user->id),
+            array('action' => 'core.login.site', 'silent' => true),
+        ));
+
+        $returnurl = $app->input->cookie->getArray();
+        $storedReturnUrl = isset($returnurl['returnurl']) ? (string) $returnurl['returnurl'] : '';
+        $redirectloginuri = MoOAuthUtility::getSafePostLoginRedirectUrl($storedReturnUrl);
+        MoOAuthUtility::clearReturnUrlCookie();
 
         $app->redirect($redirectloginuri);
     }
@@ -467,6 +499,11 @@ class plgSystemOpenjoomlaoauth extends JPlugin
         $query->update($db->quoteName('#__session'))->set($fields)->where($conditions);
         $db->setQuery($query);
         $result = $db->execute();
+    }
+
+    private function includeHelper($file)
+    {
+        include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_openjoomla_oauth' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . $file;
     }
 
     public function fetchDb($tableName, $condition, $method='loadAssoc', $columns='*')
