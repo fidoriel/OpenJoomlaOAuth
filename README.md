@@ -19,7 +19,7 @@ This is a example for Keycloak:
 <a href="?openjoomlarequest=oauthredirect&app_name=keycloak"> <button>Log In with SSO</button> </a>
 ```
 
-You can add a `redirect_after_login` parameter to the link to set the redirect after login url. Make sure to url encode the value.
+You can add a `redirect_after_login` parameter to the link to set the redirect after login url. Make sure to url encode the value. Only relative paths and URLs on the site's own domain are accepted, anything else redirects to the start page.
 
 For Joomla this could be:
 
