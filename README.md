@@ -7,6 +7,8 @@ The whole plugin was debloated, all feature limitations removed and the code was
 It is able to do everything I need but still lacks some features you may expect from a full fledged OAuth client - feel free to contribute, it is free and open source.
 There is currently no role mapping and no way to configure a custom attribute mapping.
 
+Existing Joomla users are matched by email. Logins are rejected if the IdP sends `email_verified: false`, and Super Users cannot log in via SSO.
+
 ## Create Login Button
 
 The redirect after login url is set in the cookie `returnurl`.

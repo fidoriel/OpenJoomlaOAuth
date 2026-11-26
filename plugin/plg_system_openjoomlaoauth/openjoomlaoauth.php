@@ -183,9 +183,19 @@ class plgSystemOpenjoomlaoauth extends JPlugin
                 $resourceOwner = $oj_oauth_handler->getResourceOwner($resourceownerdetailsurl, $accessToken, $idToken);
                 $oj_oauth_handler->printError();
                 list($email, $name, $username)=$this->getEmailAndName($resourceOwner, $email_attr, $name_attr, $user_name_attr);
+
+                // accounts are matched by email, so an unverified email must not be trusted
+                if (isset($resourceOwner['email_verified']) && !filter_var($resourceOwner['email_verified'], FILTER_VALIDATE_BOOLEAN)) {
+                    exit('Login not allowed: the identity provider has not verified this email address.');
+                }
+
                 $checkUser = $this->get_user_from_joomla($email);
 
                 if ($checkUser) {
+                    // Super Users have to log in with their Joomla credentials
+                    if (JUser::getInstance($checkUser->id)->authorise('core.admin')) {
+                        exit('Login not allowed: Super Users cannot log in via SSO.');
+                    }
                     $this->loginCurrentUser($checkUser, $name, $email);
                 } else {
                     $user = new JUser;
