@@ -1626,9 +1626,15 @@ function configuration($OauthApp, $appLabel)
             </div>
         </div>
     </div>
+    <?php
+    $oauthTestExpires = time() + 3600;
+    $oauthTestToken = MoOAuthUtility::buildOAuthTestSignature((string) $appLabel, $oauthTestExpires);
+    ?>
     <script>
         function testConfiguration() {
-            var appname = "<?php echo $appLabel; ?>";
+            var appname = <?php echo json_encode((string) $appLabel); ?>;
+            var testExpires = <?php echo (int) $oauthTestExpires; ?>;
+            var testToken = <?php echo json_encode($oauthTestToken); ?>;
             var winl = ( screen.width - 400 ) / 2,
             wint = ( screen.height - 800 ) / 2,
             winprops = 'height=' + 600 +
@@ -1637,7 +1643,7 @@ function configuration($OauthApp, $appLabel)
             ',left=' + winl +
             ',scrollbars=1'+
             ',resizable';
-            var myWindow = window.open('<?php echo JURI::root();?>' + '?openjoomlarequest=testattrmappingconfig&app=' + appname, "Test Attribute Configuration", winprops);
+            var myWindow = window.open('<?php echo JURI::root();?>' + '?openjoomlarequest=testattrmappingconfig&app=' + encodeURIComponent(appname) + '&test_expires=' + testExpires + '&test_token=' + encodeURIComponent(testToken), "Test Attribute Configuration", winprops);
             var timer = setInterval(function() {   
             if(myWindow.closed) {  
                 clearInterval(timer);  
