@@ -31,6 +31,7 @@ class openjoomlaoauthControllerAccountSetup extends JControllerForm
 
     public function saveConfig()
     {
+        $this->checkToken();
         $post =	JFactory::getApplication()->input->post->getArray();
         $appD = new MoOauthCustomer();
         if (count($post)==0) {
@@ -149,6 +150,7 @@ class openjoomlaoauthControllerAccountSetup extends JControllerForm
 
     public function saveMapping()
     {
+        $this->checkToken();
         $post=	JFactory::getApplication()->input->post->getArray();
 
         $email_attr = isset($post['oj_oauth_email_attr'])? $post['oj_oauth_email_attr'] : '';
@@ -176,6 +178,7 @@ class openjoomlaoauthControllerAccountSetup extends JControllerForm
 
     public function clearConfig()
     {
+        $this->checkToken('get');
         $post=	JFactory::getApplication()->input->post->getArray();
 
         $clientid = "";
@@ -221,20 +224,9 @@ class openjoomlaoauthControllerAccountSetup extends JControllerForm
     }
 
 
-    public function updateDatabaseQuery($database_name, $updatefieldsarray)
-    {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        foreach ($updatefieldsarray as $key => $value) {
-            $database_fileds[] = $db->quoteName($key) . ' = ' . $db->quote($value);
-        }
-        $query->update($db->quoteName($database_name))->set($database_fileds)->where($db->quoteName('id')." = 1");
-        $db->setQuery($query);
-        $db->execute();
-    }
-    
     public function exportConfiguration()
     {
+        $this->checkToken('get');
         $appDetails = $this->retrieveAttributes('#__openjoomlaoauth_config');
         $clientid = $appDetails['client_id'];
 
@@ -266,36 +258,5 @@ class openjoomlaoauthControllerAccountSetup extends JControllerForm
         $query->where($db->quoteName('id') . " = 1");
         $db->setQuery($query);
         return $db->loadAssoc();
-    }
-
-    public function moOAuthProxyConfigReset()
-    {
-        $nameOfDatabase= '#__openjoomlaoauth_config';
-        $updateFieldsArray = array('proxy_server_url' => '', 'proxy_server_port' => '80', 'proxy_username' => '', 'proxy_password' => '', 'proxy_set' => '');
-        
-        $this->updateDatabaseQuery($nameOfDatabase, $updateFieldsArray);
-        $this->setRedirect('index.php?option=com_openjoomla_oauth&view=accountsetup&tab-panel=account', JText::_('COM_OPENJOOMLA_OAUTH_PROXY_SETTING_RESET'));
-    }
-
-    public function moOAuthProxyServer()
-    {
-
-        $post=	JFactory::getApplication()->input->post->getArray();
-        $proxy_server_url = isset($post['proxy_server_url'])? $post['proxy_server_url'] : '';
-        $proxy_server_port = isset($post['proxy_server_port'])? $post['proxy_server_port'] : '';
-        $proxy_username = isset($post['proxy_username'])? $post['proxy_username'] : '';
-        $proxy_password = isset($post['proxy_password'])? $post['proxy_password'] : '';
-
-        $nameOfDatabase = '#__openjoomlaoauth_config';
-        $updateFieldsArray = array(
-            'proxy_server_url' 	  	  => $proxy_server_url,
-            'proxy_server_port' 	  => $proxy_server_port,
-            'proxy_username'          => $proxy_username,
-            'proxy_password'          => $proxy_password,
-            'proxy_set'               => 'yes',
-        );
-
-        $this->updateDatabaseQuery($nameOfDatabase, $updateFieldsArray);
-        $this->setRedirect('index.php?option=com_openjoomla_oauth&view=accountsetup&tab-panel=account', JText::_('COM_OPENJOOMLA_OAUTH_PROXY_SERVER_SAVED_SUCCESSFULLY'));
     }
 }
