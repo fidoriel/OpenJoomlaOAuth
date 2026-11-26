@@ -198,7 +198,7 @@ class plgSystemOpenjoomlaoauth extends JPlugin
                 */
                 $resourceownerdetailsurl = $currentapp['user_info_endpoint'];
                 if (substr($resourceownerdetailsurl, -1) == "=") {
-                    $resourceownerdetailsurl .= $accessToken;
+                    $resourceownerdetailsurl .= rawurlencode($accessToken);
                 }
                 $resourceOwner = $oj_oauth_handler->getResourceOwner($resourceownerdetailsurl, $accessToken, $idToken);
                 $oj_oauth_handler->printError();
@@ -464,8 +464,8 @@ class plgSystemOpenjoomlaoauth extends JPlugin
                 ->columns($db->quoteName($columns))
                 ->values(implode(',', $values));
             $db->setQuery($query);
+            $db->execute();
         }
-        $result = $db->execute();
 
         return $result;
     }
