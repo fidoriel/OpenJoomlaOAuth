@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.1', '8.2', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: none
+      - name: Syntax check
+        run: find plugin -name '*.php' -print0 | xargs -0 -n1 php -l
+
+  style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: php-cs-fixer
+      - name: PSR-2
+        run: php-cs-fixer fix --dry-run --diff
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate manifests
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libxml2-utils
+          xmllint --noout plugin/pkg_oauthclient.xml plugin/*/*.xml
+      - name: Versions match
+        run: |
+          versions=$(grep -ho '<version>[^<]*</version>' plugin/pkg_oauthclient.xml plugin/*/*.xml | sort -u)
+          echo "$versions"
+          test "$(echo "$versions" | wc -l)" -eq 1
+      - name: Build
+        run: bash package.sh
+      - name: Package contents
+        run: |
+          unzip -l OpenJoomlaOAuth.zip > contents.txt
+          for f in plugin/pkg_oauthclient.xml plugin/pkg_script.php plugin/com_openjoomla_oauth.zip plugin/plg_system_openjoomlaoauth.zip plugin/language/en-GB/en-GB.pkg_openjoomlaoauth.ini; do
+            grep -q " $f$" contents.txt || { echo "missing $f"; exit 1; }
+          done
