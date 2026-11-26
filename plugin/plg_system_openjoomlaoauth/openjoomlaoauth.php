@@ -52,27 +52,7 @@ class plgSystemOpenjoomlaoauth extends JPlugin
     public function onAfterInitialise()
     {
         $app = JFactory::getApplication();
-        $post = $app->input->post->getArray();
 
-        if (isset($post['mojsp_feedback'])) {
-            $radio = $post['deactivate_plugin'];
-            $data = $post['query_feedback'];
-
-            require_once JPATH_SITE . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Installer' . DIRECTORY_SEPARATOR . 'Installer.php';
-            
-            foreach ($post['result'] as $fbkey) {
-                $result = $this->fetchDb('#__extensions', array('extension_id'=>$fbkey), 'loadColumn', 'type');
-                $type = 0;
-                foreach ($result as $results) {
-                    $type = $results;
-                }
-                if ($type) {
-                    $cid = 0;
-                    $installer = new JInstaller();
-                    $installer->uninstall($type, $fbkey, $cid);
-                }
-            }
-        }
         /*----------------------Oauth Flow-------------------------------------------*/
         $get = $app->input->get->getArray();
         $session = JFactory::getSession();
