@@ -32,7 +32,7 @@ class plgSystemOpenjoomlaoauth extends JPlugin
             return;
         }
         
-        $customerResult = $this->fetchDb('#__openjoomlaoauth_config', array('id'=>'1'));
+        $customerResult = $this->fetchDb('#__openjoomla_oauth_config', array('id'=>'1'));
         $applicationName = $customerResult['appname'];
         $linkCheck = $customerResult['login_link_check'];
         if ($linkCheck==1 && $app->isClient('site')) {
@@ -87,10 +87,10 @@ class plgSystemOpenjoomlaoauth extends JPlugin
             
             // get Ouath configuration from database
             
-            $appdata = $this->fetchDb('#__openjoomlaoauth_config', array('custom_app'=>$appname));
+            $appdata = $this->fetchDb('#__openjoomla_oauth_config', array('custom_app'=>$appname));
             $session->set('appname', $appname);
             if (is_null($appdata)) {
-                $appdata = $this->fetchDb('#__openjoomlaoauth_config', array('appname'=>$appname));
+                $appdata = $this->fetchDb('#__openjoomla_oauth_config', array('appname'=>$appname));
             }
             
             if (empty($appdata['client_id']) || empty($appdata['app_scope'])) {
@@ -138,9 +138,9 @@ class plgSystemOpenjoomlaoauth extends JPlugin
                 $name_attr = "";
                 $email_attr = "";
                 $user_name_attr="";
-                $appdata = $this->fetchDb('#__openjoomlaoauth_config', array('custom_app'=>$appname));
+                $appdata = $this->fetchDb('#__openjoomla_oauth_config', array('custom_app'=>$appname));
                 if (is_null($appdata)) {
-                    $appdata = $this->fetchDb('#__openjoomlaoauth_config', array('appname'=>$appname));
+                    $appdata = $this->fetchDb('#__openjoomla_oauth_config', array('appname'=>$appname));
                 }
                 $currentapp = $appdata;
                 if (isset($appdata['email_attr'])) {
@@ -163,10 +163,11 @@ class plgSystemOpenjoomlaoauth extends JPlugin
                  * we may also get an ID token in openid flow
                  *
                  * */
+                $client_id = $currentapp['client_id'];
                 list($accessToken, $idToken) = $oj_oauth_handler->getAccessToken(
                     $currentapp['access_token_endpoint'],
                     'authorization_code',
-                    $currentapp['client_id'],
+                    $client_id,
                     $currentapp['client_secret'],
                     $get['code'],
                     JURI::root(),
@@ -186,7 +187,7 @@ class plgSystemOpenjoomlaoauth extends JPlugin
                 $checkUser = $this->get_user_from_joomla($email);
 
                 if ($checkUser) {
-                    $this->loginCurrentUser($checkUser, $name, $email);
+                    $this->loginCurrentUser($checkUser, $name, $email, $client_id, $resourceOwner);
                 } else {
                     $user = new JUser;
                     $data = array();
@@ -194,8 +195,6 @@ class plgSystemOpenjoomlaoauth extends JPlugin
                     $data['name'] = $name;
                     $data['username'] = $username;
                     $data['email'] = $email;
-
-                    $data['groups'] = $this->getRegisteredGroups();
 
                     $data['password'] = JUserHelper::genRandomPassword();
                     $data['password2'] = $data['password'];
@@ -211,7 +210,7 @@ class plgSystemOpenjoomlaoauth extends JPlugin
                         echo 'Could not save user. Error: ' . $user->getError();
                         exit;
                     }
-                    $this->loginCurrentUser($user, $name, $email);
+                    $this->loginCurrentUser($user, $name, $email, $client_id, $resourceOwner);
                 }
 
             } catch (Exception $e) {
@@ -220,17 +219,16 @@ class plgSystemOpenjoomlaoauth extends JPlugin
         }
     }
 
-    public function getRegisteredGroups()
+    public function getRegisteredGroups($roles)
     {
-        $names = ["Registriert", "Registered"];
         $db = JFactory::getDbo();
         $groupIds = array();
-    
-        foreach ($names as $name) {
+
+        foreach ($roles as $name) {
             $query = $db->getQuery(true)
-                ->select($db->quoteName('id'))
-                ->from($db->quoteName('#__usergroups'))
-                ->where($db->quoteName('title') . ' = ' . $db->quote($name));
+                ->select($db->quoteName('usergroup_id'))
+                ->from($db->quoteName('#__openjoomla_role_mapping'))
+                ->where($db->quoteName('role_string') . ' = ' . $db->quote($name));
             $db->setQuery($query);
             $groupId = $db->loadResult();
             
@@ -239,12 +237,9 @@ class plgSystemOpenjoomlaoauth extends JPlugin
             }
         }
 
-        if (empty($groupIds)) {
-            throw new Exception('No registered groups found for: ' . implode(', ', $names));
-        }
-
         return $groupIds;
     }
+
 
     public function onExtensionBeforeUninstall($id)
     {
@@ -287,7 +282,7 @@ class plgSystemOpenjoomlaoauth extends JPlugin
             self::testattrmappingconfig("", $resourceOwner);
             echo "</table> <br><br>";
             $user_attributes = $this->attributesNames;
-            $this->updateDb('#__openjoomlaoauth_config', array('test_attribute_name'=>$user_attributes), array("id"=>1));
+            $this->updateDb('#__openjoomla_oauth_config', array('test_attribute_name'=>$user_attributes), array("id"=>1));
             exit();
         }
         if (!empty($email_attr)) {
@@ -378,11 +373,11 @@ class plgSystemOpenjoomlaoauth extends JPlugin
         return $checkUser;
     }
 
-    public function loginCurrentUser($checkUser, $name, $email)
+    public function loginCurrentUser($checkUser, $name, $email, $client_id, $resourceOwner)
     {
         $app = JFactory::getApplication();
         $user = JUser::getInstance($checkUser->id);
-        $this->updateCurrentUser($user->id, $name);
+        $this->updateCurrentUser($user->id, $name, $resourceOwner);
         $session = JFactory::getSession(); #Get current session vars
         // Register the needed session variables
         $session->set('user', $user);
@@ -403,7 +398,7 @@ class plgSystemOpenjoomlaoauth extends JPlugin
         $app->redirect($redirectloginuri);
     }
 
-    public function updateCurrentUser($id, $name)
+    public function updateCurrentUser($id, $name, $resourceOwner)
     {
         // Username
         if (empty($name)) {
@@ -430,8 +425,9 @@ class plgSystemOpenjoomlaoauth extends JPlugin
         $currentGroupIds = $db->loadColumn();
 
         // Group
-        $groupIds = $this->getRegisteredGroups();
+        $groupIds = $this->getRegisteredGroups($resourceOwner["groups"]);
 
+        // set new grops
         foreach ($groupIds as $groupId) {
             if (in_array($groupId, $currentGroupIds)) {
                 continue;
@@ -443,6 +439,19 @@ class plgSystemOpenjoomlaoauth extends JPlugin
             $query->insert($db->quoteName('#__user_usergroup_map'))
                 ->columns($db->quoteName($columns))
                 ->values(implode(',', $values));
+            $db->setQuery($query);
+            $db->execute();
+        }
+
+        // remove old groups
+        if (!empty($groupIds)) {
+            $query = $db->getQuery(true);
+            $conditions = array(
+                $db->quoteName('user_id') . ' = ' . $db->quote($id),
+                $db->quoteName('group_id') . ' NOT IN (' . implode(',', array_map(array($db, 'quote'), $groupIds)) . ')'
+            );
+            $query->delete($db->quoteName('#__user_usergroup_map'))
+                ->where($conditions);
             $db->setQuery($query);
             $db->execute();
         }
