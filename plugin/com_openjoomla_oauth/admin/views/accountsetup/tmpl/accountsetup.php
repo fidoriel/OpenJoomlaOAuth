@@ -1147,7 +1147,7 @@ function configuration($OauthApp, $appLabel)
             <div class="oj_boot_row m-0 mt-3 p-0">
                 <div  class="oj_boot_col-sm-12 m-0 p-0">
                     <div class="oj_boot_text-center">
-                        <?php  echo "<a href='index.php?option=com_openjoomla_oauth&view=accountsetup&task=accountsetup.clearConfig'
+                        <?php  echo "<a href='index.php?option=com_openjoomla_oauth&view=accountsetup&task=accountsetup.clearConfig&" . JSession::getFormToken() . "=1'
                                     class='oj_boot_btn oj_boot_pb-1 oj_boot_btn-danger' style='padding:2px 5px'>".JText::_('COM_OPENJOOMLA_OAUTH_DELETE_APPLICATION')."</a>";
     ?> 
                     </div>
@@ -1189,6 +1189,7 @@ function configuration($OauthApp, $appLabel)
                                                         <input class="oj_boot_form-control" id="callbackurl" name="callbackurl" type="text" readonly  value='<?php echo $redirecturi; ?>'>
                                                     </div>
                                                 </div>
+                                                <?php echo JHtml::_('form.token'); ?>
                                             </form>
                                         </div>
                                         <div class="oj_boot_col-sm-1">
@@ -1383,6 +1384,7 @@ function configuration($OauthApp, $appLabel)
                                 </div>
                             </div>
                         </div>
+                        <?php echo JHtml::_('form.token'); ?>
                     </form>        
                     <div class="oj_boot_row oj_boot_mt-2">
                         <div class="oj_boot_col-sm-12 oj_boot_mt-3 oj_boot_text-right">
@@ -1519,6 +1521,7 @@ function configuration($OauthApp, $appLabel)
                                 <input type="submit" name="send_query" style="margin-bottom:3%;" class="oj_boot_btn oj_boot_btn-primary p-2" value="Finish Configuration"> 
                             </div>
                         </div>
+                        <?php echo JHtml::_('form.token'); ?>
                     </form>
                 </div>
             </div>
@@ -1794,7 +1797,7 @@ function ojImportAndExport()
                     <strong>Download Configuration: </strong>
                 </div> 
                 <div class="oj_boot_col-4">
-                    <a href='index.php?option=com_openjoomla_oauth&view=accountsetup&task=accountsetup.exportConfiguration' class="oj_boot_btn oj_boot_btn-primary oj_boot_float-right" style='padding:2px 5px'><?php echo JText::_('COM_OPENJOOMLA_OAUTH_EXPORT_CONFIGURATION');?></a>
+                    <a href='index.php?option=com_openjoomla_oauth&view=accountsetup&task=accountsetup.exportConfiguration&<?php echo JSession::getFormToken(); ?>=1' class="oj_boot_btn oj_boot_btn-primary oj_boot_float-right" style='padding:2px 5px'><?php echo JText::_('COM_OPENJOOMLA_OAUTH_EXPORT_CONFIGURATION');?></a>
                 </div>
             </div>
         </div>
