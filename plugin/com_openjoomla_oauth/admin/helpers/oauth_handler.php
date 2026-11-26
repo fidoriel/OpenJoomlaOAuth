@@ -37,7 +37,8 @@ class OpenOAuthHandler
         curl_setopt($ch, CURLOPT_ENCODING, "");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
         curl_setopt($ch, CURLOPT_POST, true);
         
@@ -46,19 +47,35 @@ class OpenOAuthHandler
                 'Accept: application/json',
                 'Authorization: Basic ' . base64_encode($clientid . ":" . $clientsecret)
             ));
-            curl_setopt($ch, CURLOPT_POSTFIELDS, 'redirect_uri='.urlencode($redirect_url).'&grant_type='.$grant_type.'&client_id='.urlencode($clientid).'&client_secret='.urlencode($clientsecret).'&code='.$code);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
+                'redirect_uri'  => $redirect_url,
+                'grant_type'    => $grant_type,
+                'client_id'     => $clientid,
+                'client_secret' => $clientsecret,
+                'code'          => $code,
+            )));
 
         } elseif ($in_header_or_body=='inHeader') {
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 'Accept: application/json',
                 'Authorization: Basic ' . base64_encode($clientid . ":" . $clientsecret)
             ));
-            curl_setopt($ch, CURLOPT_POSTFIELDS, 'redirect_uri='.urlencode($redirect_url).'&grant_type='.$grant_type.'&code='.$code);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
+                'redirect_uri' => $redirect_url,
+                'grant_type'   => $grant_type,
+                'code'         => $code,
+            )));
         } else {
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 'Accept: application/json'
             ));
-            curl_setopt($ch, CURLOPT_POSTFIELDS, 'redirect_uri='.urlencode($redirect_url).'&grant_type='.$grant_type.'&client_id='.$clientid.'&client_secret='.$clientsecret.'&code='.$code);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
+                'redirect_uri'  => $redirect_url,
+                'grant_type'    => $grant_type,
+                'client_id'     => $clientid,
+                'client_secret' => $clientsecret,
+                'code'          => $code,
+            )));
         }
         
         $content = curl_exec($ch);
@@ -104,7 +121,7 @@ class OpenOAuthHandler
                 return json_decode($id_body, true);
             }
         }
-        $this->setError('Invalid response received.<br><b>Id_token : </b>'.$id_token);
+        $this->setError('Invalid response received. Id_token: '.$id_token);
         $session->set('oj_reason', 'Invalid response received.<br><b>Id_token : </b>'.$id_token);
         return false;
     }
@@ -120,7 +137,8 @@ class OpenOAuthHandler
         curl_setopt($ch, CURLOPT_ENCODING, "");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
         curl_setopt($ch, CURLOPT_POST, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -170,11 +188,8 @@ class OpenOAuthHandler
             return;
         }
 
-        if (is_array($this->error)) {
-            print_r($this->error);
-        } else {
-            echo($this->error);
-        }
+        $errorText = is_array($this->error) ? print_r($this->error, true) : (string) $this->error;
+        echo nl2br(htmlspecialchars($errorText, ENT_QUOTES, 'UTF-8'), false);
         exit;
     }
 }
